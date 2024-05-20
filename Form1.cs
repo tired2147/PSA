@@ -243,7 +243,7 @@ namespace PSA
             else
             {
                 OpenFile();
-                Console.WriteLine("asdf");
+                Console.WriteLine("1");
                
             }
             
