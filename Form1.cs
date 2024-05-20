@@ -244,6 +244,7 @@ namespace PSA
             else
             {
                 OpenFile();
+                Console.WriteLine("4");
                
             }
             
