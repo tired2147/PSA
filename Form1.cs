@@ -23,13 +23,14 @@ namespace PSA
         public Form1()
         {
             InitializeComponent();
+            dataGridView2.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dataGridView2.RowCount = 12;
         }
         List<Data> Data = new List<Data>();
 
         private void OpenFile()
         {
-            dataGridView2.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dataGridView2.RowCount = 12;
+          
             dataGridView1.Rows.Clear();
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "CSV файл (*.csv)|*.csv";
@@ -39,7 +40,7 @@ namespace PSA
             {
                 try
                 {
-                    
+                    //комментарий
                     using (var reader = new StreamReader(ofd.FileName))
                     {
                         string line;
