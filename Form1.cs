@@ -81,7 +81,9 @@ namespace PSA
             Razchet();
            
         }
-
+        double med;
+        double left;
+        double right;
         private void Razchet()
         {
             //среднее значение
@@ -111,14 +113,16 @@ namespace PSA
                 int n = sortedValues.Count;
                 if (n % 2 == 1)
                 {
+                   
                     return sortedValues[n / 2];
                 }
                 else
                 {
                     return (sortedValues[n / 2 - 1] + sortedValues[n / 2]) / 2.0;
                 }
+                
             }
-
+            med = CalculateMedian(Data);
 
             //дисперсия
             double CalculateVariance(List<Data> dataList)
@@ -153,7 +157,8 @@ namespace PSA
 
                 return dataList.Max(data => data.Value);
             }
-
+            left = CalculateLeftBound(Data);
+            right = CalculateRightBound(Data);
 
             //относительная частота
             Dictionary<double, double> CalculateRelativeFrequency(List<Data> dataList)
@@ -244,7 +249,7 @@ namespace PSA
             else
             {
                 OpenFile();
-                Console.WriteLine("4");
+             
                
             }
             
@@ -260,6 +265,53 @@ namespace PSA
         private void dataGridView2_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
 
+        }
+        int shetchik1 = 0;
+        int shetchik2 = 0;
+        int shetchik3 = 0;
+        private void drawOnSeries (double ChtoRisovat, int nomer, string nazvanie,int shetchik)
+        {
+            
+            Series ser = new Series(nazvanie);
+            ser.ChartType = SeriesChartType.Line;
+            //тут можно будет указать цвета и прочую хуету
+
+            if (shetchik%2==0)
+            {
+
+
+
+                foreach (var data in Data)
+                {
+                    ser.Points.AddXY(data.Date, ChtoRisovat);
+                }
+                chart1.Series.Add(ser);
+            }
+            else
+            {
+                chart1.Series.RemoveAt(nomer);
+            }
+            
+
+            
+        
+    }
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            drawOnSeries(med, 1, "медиана",shetchik1);
+            shetchik1++;
+        }
+
+        private void checkBox2_CheckedChanged(object sender, EventArgs e)
+        {
+            drawOnSeries(left, 2, "Левый предел", shetchik2) ;
+            shetchik2++;
+        }
+
+        private void checkBox3_CheckedChanged(object sender, EventArgs e)
+        {
+            drawOnSeries(right, 3, "Правый предел", shetchik3);
+            shetchik3++;
         }
     }
 }
