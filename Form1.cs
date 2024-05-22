@@ -20,16 +20,16 @@ namespace PSA
 {
     public partial class Form1 : Form
     {
+        private ToolTip toolTip;
         public Form1()
         {
             InitializeComponent();
-            dataGridView2.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dataGridView2.RowCount = 12;
-            
+            InitializeToolTiop();
+
         }
 
         List<Data> Data = new List<Data>();
-        double median, leftBound, rightBound;
+        double median, leftBound, rightBound, srznach, proc;
 
 
 
@@ -60,7 +60,7 @@ namespace PSA
         }
         private void OpenFile()
         {
-            dataGridView1.Rows.Clear();
+           
             
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "CSV файл (*.csv)|*.csv";
@@ -188,9 +188,25 @@ namespace PSA
 
                 return dataList.Max(data => data.Value);
             }
+            double Pocents(List<Data> dataList)
+            {
+                double pervoeChislo = dataList.First().Value;
+                double posledneeChislo = dataList.ElementAt(dataList.Count-1).Value;
+                
+                if(pervoeChislo > posledneeChislo)
+                {
+                    return ((pervoeChislo - posledneeChislo)/pervoeChislo)*100 * (-1);
+                }
+                else
+                {
+                    return ((posledneeChislo - pervoeChislo)/posledneeChislo ) * (100) ;
+                }
+            }
             leftBound = CalculateLeftBound(Data);
             rightBound = CalculateRightBound(Data);
-
+            srznach = CalculateMean(Data);
+            proc = Pocents(Data);
+            Console.WriteLine(proc+"");
             //относительная частота
             Dictionary<double, double> CalculateRelativeFrequency(List<Data> dataList)
             {
@@ -212,22 +228,29 @@ namespace PSA
                 return frequencyMap;
             }
 
-            dataGridView2.Rows[0].Cells[0].Value = "Среднее значение: " + Math.Round(CalculateMean(Data), 2);
-            dataGridView2.Rows[1].Cells[0].Value = "Медиана: " + Math.Round(CalculateMedian(Data), 2);
-            dataGridView2.Rows[2].Cells[0].Value = "Дисперсия: " + Math.Round(CalculateVariance(Data), 2);
-            dataGridView2.Rows[3].Cells[0].Value = "Левый предел: " + Math.Round(CalculateLeftBound(Data), 2);
-            dataGridView2.Rows[4].Cells[0].Value = "Правый предел: " + Math.Round(CalculateRightBound(Data), 2);
-            dataGridView2.Rows[5].Cells[0].Value = "Относит. частота: ";
-
-            foreach(var i in CalculateRelativeFrequency(Data))
+            label1.Text = "Среднее значение: " + Math.Round(CalculateMean(Data), 2);
+            label2.Text = "Медиана: " + Math.Round(CalculateMedian(Data), 2);
+            label3.Text = "Дисперсия: " + Math.Round(CalculateVariance(Data), 2);
+            label4.Text = "Левый предел: " + Math.Round(CalculateLeftBound(Data), 2);
+            label5.Text = "Правый предел: " + Math.Round(CalculateRightBound(Data), 2);
+            if (proc>0)
             {
-                dataGridView2.Rows[6].Cells[0].Value = dataGridView2.Rows[6].Cells[0].Value + i.Value.ToString() + "; ";
+                label6.Text = "Акции выросли на: " + Math.Round(proc, 2)+ "%";
+                label6.ForeColor = Color.Green;
             }
+            else
+            {
+                label6.Text = "Акции упали на: " + Math.Round(-proc, 2) + "%";
+                label6.ForeColor = Color.Red;
+                
+            }
+            
 
 
-            Console.WriteLine(CalculateMean(Data) + "        " + CalculateMedian(Data)
-                + "           " + CalculateVariance(Data) + "          " + CalculateLeftBound(Data) + "        " + CalculateRightBound(Data)
-                + "           " + CalculateRelativeFrequency(Data));
+
+            //Console.WriteLine(CalculateMean(Data) + "        " + CalculateMedian(Data)
+            //    + "           " + CalculateVariance(Data) + "          " + CalculateLeftBound(Data) + "        " + CalculateRightBound(Data)
+            //    + "           " + CalculateRelativeFrequency(Data));
 
             //dataGridView2.Rows[0].Cells[0].Value = Convert.ToString("Средняя арифметическая взвешенная: ") + Math.Round(Convert.ToDouble(sredVelich), 2);
 
@@ -291,6 +314,41 @@ namespace PSA
             }
             else //передаем название для удаления
                 chart1.Series.RemoveAt(chart1.Series.IndexOf("median"));
+        }
+
+
+
+       
+        private void InitializeToolTiop()
+        {
+            toolTip = new ToolTip();
+            toolTip.AutoPopDelay = 1000000;
+            toolTip.InitialDelay = 100;
+            toolTip.ReshowDelay = 500;
+          
+            toolTip.ShowAlways = true;
+
+            toolTip.SetToolTip(this.label1, "Среднее значение, или математическое ожидание, представляет собой среднюю величину набора данных. \nЧтобы вычислить среднее значение, нужно сложить все значения в наборе данных и затем разделить полученную сумму на количество этих значений.");
+            toolTip.SetToolTip(this.label2, "Медиана — это значение, которое делит упорядоченный набор данных пополам. \nЕсли количество элементов в наборе данных нечётное, медианой будет центральный элемент. \nЕсли количество элементов чётное, медианой будет среднее значение двух центральных элементов после сортировки данных.");
+            toolTip.SetToolTip(this.label3, "Дисперсия измеряет, насколько значения в наборе данных отклоняются от среднего значения. \nЧтобы найти дисперсию, сначала нужно определить среднее значение набора данных. \nЗатем нужно вычислить отклонение каждого значения от среднего, возвести каждое отклонение в квадрат, \nсложить все квадраты отклонений и, наконец, разделить полученную сумму на количество значений в наборе данных.");
+            toolTip.SetToolTip(this.label4, "Левый предел функции в определённой точке — это значение, к которому стремится функция, когда переменная приближается к этой точке слева, \nто есть с меньших значений. Это помогает понять поведение функции с одной стороны от данной точки.");
+            toolTip.SetToolTip(this.label5, "Правый предел функции в определённой точке — это значение, к которому стремится функция, когда переменная приближается к этой точке справа, \nто есть с больших значений. Это помогает понять поведение функции с другой стороны от данной точки.");
+        }
+
+        private void справкаToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Авторы:\nИванов О.Н. \nБарановский Д.Ю. \nСитникова Елизавета ");
+        }
+
+        private void checkBox4_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox4.Checked == true)
+            {
+                //передаем что нарисовать и название
+                DrawChart(srznach, "Mush");
+            }
+            else //передаем название для удаления
+                chart1.Series.RemoveAt(chart1.Series.IndexOf("Mush"));
         }
 
         private void checkBox2_CheckStateChanged(object sender, EventArgs e)
