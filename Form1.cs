@@ -70,33 +70,39 @@ namespace PSA
             {
                 try
                 {
-                    
                     using (var reader = new StreamReader(ofd.FileName))
                     {
                         string line;
                         while ((line = reader.ReadLine()) != null)
                         {
-                            string[] parts = line.Split(';'); // Разделить строку по запятой
+                            string[] parts = line.Split(';');
 
-                            if (parts.Length >= 2)
+                            // Проверка на пустые строки или ячейки
+                            if (parts.Length < 2 || string.IsNullOrWhiteSpace(parts[0]) || string.IsNullOrWhiteSpace(parts[1]))
                             {
-                                if (double.TryParse(parts[0], NumberStyles.Any, CultureInfo.InvariantCulture, out double value)
-                                    && DateTime.TryParseExact(parts[1].Trim(), "yyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime date))
-                                {
-                                    Data.Add(new Data { Value = value, Date = date });
-                                }
-                                else
-                                {
-                                    Console.WriteLine($"Ошибка при разборе строки: {line}");
-                                }
+                                Console.WriteLine($"Пропуск пустой или некорректной строки: {line}");
+                                continue;
+                            }
+
+                            string valueStr = parts[0].Trim();
+                            string dateStr = parts[1].Trim();
+
+                            // Удаление всех букв из строки перед попыткой парсинга, сохраняя цифры, точки и запятые
+                            valueStr = new string(valueStr.Where(c => char.IsDigit(c) || c == '.' || c == ',').ToArray());
+                            dateStr = new string(dateStr.Where(char.IsDigit).ToArray());
+
+                            // Попытка распарсить значение и дату
+                            if (double.TryParse(valueStr, NumberStyles.Any, CultureInfo.InvariantCulture, out double value)
+                                && DateTime.TryParseExact(dateStr, "yyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime date))
+                            {
+                                Data.Add(new Data { Value = value, Date = date });
                             }
                             else
                             {
-                                Console.WriteLine($"Некорректный формат строки: {line}");
+                                Console.WriteLine($"Ошибка при разборе строки и невозможность исправить: {line}");
                             }
                         }
                     }
-
                 }
                 catch (Exception ex)
                 {
@@ -266,7 +272,7 @@ namespace PSA
             chart1.Series.Clear();
 
             // Создать новую серию данных для графика
-            Series series = new Series("Data Series");
+            Series series = new Series("stocks");
             series.ChartType = SeriesChartType.Line; // Выбрать тип графика (линейный)
 
             // Добавить данные в серию
