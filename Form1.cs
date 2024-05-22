@@ -25,13 +25,43 @@ namespace PSA
             InitializeComponent();
             dataGridView2.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dataGridView2.RowCount = 12;
+            
         }
-        List<Data> Data = new List<Data>();
 
+        List<Data> Data = new List<Data>();
+        double median, leftBound, rightBound;
+
+
+
+
+        private void downloadData_Click(object sender, EventArgs e)
+        {
+            checkBox1.CheckState = CheckState.Unchecked;
+            checkBox2.CheckState = CheckState.Unchecked;
+            checkBox3.CheckState = CheckState.Unchecked;
+
+            if (Data.Count > 0)
+            {
+                DialogResult result = MessageBox.Show("Открыть новый файл?\nВсе подсчеты будут потеряны!.", "Сообщение",
+                 MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (result == DialogResult.Yes)
+                {
+                    OpenFile();
+
+                }
+
+            }
+            else
+            {
+                OpenFile();
+
+
+            }
+        }
         private void OpenFile()
         {
-          
             dataGridView1.Rows.Clear();
+            
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "CSV файл (*.csv)|*.csv";
             ofd.FileName = "";
@@ -40,7 +70,7 @@ namespace PSA
             {
                 try
                 {
-                    //комментарий
+                    
                     using (var reader = new StreamReader(ofd.FileName))
                     {
                         string line;
@@ -81,9 +111,10 @@ namespace PSA
             Razchet();
            
         }
-        double med;
-        double left;
-        double right;
+        
+
+
+
         private void Razchet()
         {
             //среднее значение
@@ -122,7 +153,7 @@ namespace PSA
                 }
                 
             }
-            med = CalculateMedian(Data);
+            median = CalculateMedian(Data);
 
             //дисперсия
             double CalculateVariance(List<Data> dataList)
@@ -157,8 +188,8 @@ namespace PSA
 
                 return dataList.Max(data => data.Value);
             }
-            left = CalculateLeftBound(Data);
-            right = CalculateRightBound(Data);
+            leftBound = CalculateLeftBound(Data);
+            rightBound = CalculateRightBound(Data);
 
             //относительная частота
             Dictionary<double, double> CalculateRelativeFrequency(List<Data> dataList)
@@ -203,6 +234,9 @@ namespace PSA
         }
 
 
+
+
+
         private void DrawChart(List<Data> DataList)
         {
             // Очистить существующие серии данных на графике
@@ -222,96 +256,66 @@ namespace PSA
             chart1.Series.Add(series);
 
         }
-
-        private void button1_Click(object sender, EventArgs e)
+        private void DrawChart(double ChtoRisovat, string nazvanie)
         {
+            // Создать новую серию данных для графика
+            Series series = new Series(nazvanie);
+            series.ChartType = SeriesChartType.Line; // Выбрать тип графика (линейный)
 
-        }
-
-        private void chart1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void downloadData_Click(object sender, EventArgs e)
-        {
-            if (dataGridView1.RowCount > 0)
+            // Добавить данные в серию
+            foreach (var data in Data)
             {
-                DialogResult result = MessageBox.Show("Открыть новый файл?\nВсе подсчеты будут потеряны!.", "Сообщение",
-                 MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                if (result == DialogResult.Yes)
-                {
-                    OpenFile();
-
-                }
-
+                series.Points.AddXY(data.Date, ChtoRisovat);
             }
-            else
-            {
-                OpenFile();
-             
-               
-            }
-            
 
-            
+            // Добавить серию данных на график
+            chart1.Series.Add(series);
         }
+        
+        
+       
 
         private void Form1_Load(object sender, EventArgs e)
         {
 
         }
 
-        private void dataGridView2_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
 
+
+        private void checkBox1_CheckStateChanged(object sender, EventArgs e)
+        {
+            if (checkBox1.Checked == true)
+            {
+                //передаем что нарисовать и название
+                DrawChart(median, "median");
+            }
+            else //передаем название для удаления
+                chart1.Series.RemoveAt(chart1.Series.IndexOf("median"));
         }
-        int shetchik1 = 0;
-        int shetchik2 = 0;
-        int shetchik3 = 0;
-        private void drawOnSeries (double ChtoRisovat, int nomer, string nazvanie,int shetchik)
+
+        private void checkBox2_CheckStateChanged(object sender, EventArgs e)
         {
-            
-            Series ser = new Series(nazvanie);
-            ser.ChartType = SeriesChartType.Line;
-            //тут можно будет указать цвета и прочую хуету
-
-            if (shetchik%2==0)
+            if (checkBox2.Checked == true)
             {
-
-
-
-                foreach (var data in Data)
-                {
-                    ser.Points.AddXY(data.Date, ChtoRisovat);
-                }
-                chart1.Series.Add(ser);
+                //передаем что нарисовать и название
+                DrawChart(leftBound, "leftBound");
             }
-            else
+            else //передаем название для удаления
+                chart1.Series.RemoveAt(chart1.Series.IndexOf("leftBound"));
+        }
+
+        private void checkBox3_CheckStateChanged(object sender, EventArgs e)
+        {
+            if (checkBox3.Checked == true)
             {
-                chart1.Series.RemoveAt(nomer);
+                //передаем что нарисовать и название
+                DrawChart(rightBound, "rightBound");
             }
-            
+            else //передаем название для удаления
+                chart1.Series.RemoveAt(chart1.Series.IndexOf("rightBound"));
+        }
 
-            
         
-    }
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
-        {
-            drawOnSeries(med, 1, "медиана",shetchik1);
-            shetchik1++;
-        }
 
-        private void checkBox2_CheckedChanged(object sender, EventArgs e)
-        {
-            drawOnSeries(left, 2, "Левый предел", shetchik2) ;
-            shetchik2++;
-        }
-
-        private void checkBox3_CheckedChanged(object sender, EventArgs e)
-        {
-            drawOnSeries(right, 3, "Правый предел", shetchik3);
-            shetchik3++;
-        }
     }
 }
