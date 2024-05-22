@@ -224,14 +224,7 @@
             this.label6.Size = new System.Drawing.Size(120, 25);
             this.label6.TabIndex = 7;
             this.label6.Text = "Проценты";
-            // 
-            // dataGridView2
-            // 
-            this.dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView2.Location = new System.Drawing.Point(13, 320);
-            this.dataGridView2.Name = "dataGridView2";
-            this.dataGridView2.Size = new System.Drawing.Size(902, 150);
-            this.dataGridView2.TabIndex = 2;
+
             // 
             // Form1
             // 
