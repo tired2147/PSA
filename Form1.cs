@@ -23,14 +23,45 @@ namespace PSA
         public Form1()
         {
             InitializeComponent();
-        }
-        List<Data> Data = new List<Data>();
-
-        private void OpenFile()
-        {
             dataGridView2.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dataGridView2.RowCount = 12;
+            
+        }
+
+        List<Data> Data = new List<Data>();
+        double median, leftBound, rightBound;
+
+
+
+
+        private void downloadData_Click(object sender, EventArgs e)
+        {
+            checkBox1.CheckState = CheckState.Unchecked;
+            checkBox2.CheckState = CheckState.Unchecked;
+            checkBox3.CheckState = CheckState.Unchecked;
+
+            if (Data.Count > 0)
+            {
+                DialogResult result = MessageBox.Show("Открыть новый файл?\nВсе подсчеты будут потеряны!.", "Сообщение",
+                 MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (result == DialogResult.Yes)
+                {
+                    OpenFile();
+
+                }
+
+            }
+            else
+            {
+                OpenFile();
+
+
+            }
+        }
+        private void OpenFile()
+        {
             dataGridView1.Rows.Clear();
+            
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "CSV файл (*.csv)|*.csv";
             ofd.FileName = "";
@@ -80,6 +111,9 @@ namespace PSA
             Razchet();
            
         }
+        
+
+
 
         private void Razchet()
         {
@@ -110,14 +144,16 @@ namespace PSA
                 int n = sortedValues.Count;
                 if (n % 2 == 1)
                 {
+                   
                     return sortedValues[n / 2];
                 }
                 else
                 {
                     return (sortedValues[n / 2 - 1] + sortedValues[n / 2]) / 2.0;
                 }
+                
             }
-
+            median = CalculateMedian(Data);
 
             //дисперсия
             double CalculateVariance(List<Data> dataList)
@@ -152,7 +188,8 @@ namespace PSA
 
                 return dataList.Max(data => data.Value);
             }
-
+            leftBound = CalculateLeftBound(Data);
+            rightBound = CalculateRightBound(Data);
 
             //относительная частота
             Dictionary<double, double> CalculateRelativeFrequency(List<Data> dataList)
@@ -197,6 +234,9 @@ namespace PSA
         }
 
 
+
+
+
         private void DrawChart(List<Data> DataList)
         {
             // Очистить существующие серии данных на графике
@@ -216,49 +256,66 @@ namespace PSA
             chart1.Series.Add(series);
 
         }
-
-        private void button1_Click(object sender, EventArgs e)
+        private void DrawChart(double ChtoRisovat, string nazvanie)
         {
+            // Создать новую серию данных для графика
+            Series series = new Series(nazvanie);
+            series.ChartType = SeriesChartType.Line; // Выбрать тип графика (линейный)
 
-        }
-
-        private void chart1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void downloadData_Click(object sender, EventArgs e)
-        {
-            if (dataGridView1.RowCount > 0)
+            // Добавить данные в серию
+            foreach (var data in Data)
             {
-                DialogResult result = MessageBox.Show("Открыть новый файл?\nВсе подсчеты будут потеряны!.", "Сообщение",
-                 MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                if (result == DialogResult.Yes)
-                {
-                    OpenFile();
-
-                }
-
+                series.Points.AddXY(data.Date, ChtoRisovat);
             }
-            else
-            {
-                OpenFile();
-                Console.WriteLine("1");
-               
-            }
-            
 
-            
+            // Добавить серию данных на график
+            chart1.Series.Add(series);
         }
+        
+        
+       
 
         private void Form1_Load(object sender, EventArgs e)
         {
 
         }
 
-        private void dataGridView2_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
 
+
+        private void checkBox1_CheckStateChanged(object sender, EventArgs e)
+        {
+            if (checkBox1.Checked == true)
+            {
+                //передаем что нарисовать и название
+                DrawChart(median, "median");
+            }
+            else //передаем название для удаления
+                chart1.Series.RemoveAt(chart1.Series.IndexOf("median"));
         }
+
+        private void checkBox2_CheckStateChanged(object sender, EventArgs e)
+        {
+            if (checkBox2.Checked == true)
+            {
+                //передаем что нарисовать и название
+                DrawChart(leftBound, "leftBound");
+            }
+            else //передаем название для удаления
+                chart1.Series.RemoveAt(chart1.Series.IndexOf("leftBound"));
+        }
+
+        private void checkBox3_CheckStateChanged(object sender, EventArgs e)
+        {
+            if (checkBox3.Checked == true)
+            {
+                //передаем что нарисовать и название
+                DrawChart(rightBound, "rightBound");
+            }
+            else //передаем название для удаления
+                chart1.Series.RemoveAt(chart1.Series.IndexOf("rightBound"));
+        }
+
+        
+
     }
 }
