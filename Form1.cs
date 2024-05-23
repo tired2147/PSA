@@ -39,6 +39,7 @@ namespace PSA
             checkBox1.CheckState = CheckState.Unchecked;
             checkBox2.CheckState = CheckState.Unchecked;
             checkBox3.CheckState = CheckState.Unchecked;
+            checkBox4.CheckState = CheckState.Unchecked;
 
             if (Data.Count > 0)
             {
@@ -60,8 +61,9 @@ namespace PSA
         }
         private void OpenFile()
         {
-           
-            
+            int countErrors = 0;//счетчик для подсчета ошибок в данных
+            int countEmptyCells = 0;//счетчик для подсчета пустых ячеек
+
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "CSV файл (*.csv)|*.csv";
             ofd.FileName = "";
@@ -73,6 +75,7 @@ namespace PSA
                     using (var reader = new StreamReader(ofd.FileName))
                     {
                         string line;
+                        
                         while ((line = reader.ReadLine()) != null)
                         {
                             string[] parts = line.Split(';');
@@ -81,6 +84,7 @@ namespace PSA
                             if (parts.Length < 2 || string.IsNullOrWhiteSpace(parts[0]) || string.IsNullOrWhiteSpace(parts[1]))
                             {
                                 Console.WriteLine($"Пропуск пустой или некорректной строки: {line}");
+                                countEmptyCells++;
                                 continue;
                             }
 
@@ -99,6 +103,7 @@ namespace PSA
                             }
                             else
                             {
+                                countErrors++;
                                 Console.WriteLine($"Ошибка при разборе строки и невозможность исправить: {line}");
                             }
                         }
@@ -109,13 +114,19 @@ namespace PSA
                     MessageBox.Show(ex.Message);
                 }
             }
-            foreach(var i in Data)
+            
+            DrawChart(Data);
+            Razchet();
+            if (countErrors > 0 || countEmptyCells > 0)
+            {
+                Console.WriteLine($"Обнаружено:\n *{countEmptyCells} строк, где есть пустые ячейки\n *{countErrors} ошибок, которые не удалось исправить");
+                MessageBox.Show($"Обнаружено:\n *{countEmptyCells} строк, где есть пустые ячейки\n *{countErrors} ошибок, которые не удалось исправить");
+            }
+
+            foreach (var i in Data)
             {
                 Console.WriteLine(i.Value + " " + i.Date);
             }
-            DrawChart(Data);
-            Razchet();
-           
         }
         
 
@@ -194,6 +205,7 @@ namespace PSA
 
                 return dataList.Max(data => data.Value);
             }
+            //процент роста или падения акций
             double Pocents(List<Data> dataList)
             {
                 double pervoeChislo = dataList.First().Value;
@@ -212,7 +224,7 @@ namespace PSA
             rightBound = CalculateRightBound(Data);
             srznach = CalculateMean(Data);
             proc = Pocents(Data);
-            Console.WriteLine(proc+"");
+
             //относительная частота
             Dictionary<double, double> CalculateRelativeFrequency(List<Data> dataList)
             {
@@ -321,42 +333,6 @@ namespace PSA
             else //передаем название для удаления
                 chart1.Series.RemoveAt(chart1.Series.IndexOf("median"));
         }
-
-
-
-       
-        private void InitializeToolTiop()
-        {
-            toolTip = new ToolTip();
-            toolTip.AutoPopDelay = 1000000;
-            toolTip.InitialDelay = 100;
-            toolTip.ReshowDelay = 500;
-          
-            toolTip.ShowAlways = true;
-
-            toolTip.SetToolTip(this.label1, "Среднее значение, или математическое ожидание, представляет собой среднюю величину набора данных. \nЧтобы вычислить среднее значение, нужно сложить все значения в наборе данных и затем разделить полученную сумму на количество этих значений.");
-            toolTip.SetToolTip(this.label2, "Медиана — это значение, которое делит упорядоченный набор данных пополам. \nЕсли количество элементов в наборе данных нечётное, медианой будет центральный элемент. \nЕсли количество элементов чётное, медианой будет среднее значение двух центральных элементов после сортировки данных.");
-            toolTip.SetToolTip(this.label3, "Дисперсия измеряет, насколько значения в наборе данных отклоняются от среднего значения. \nЧтобы найти дисперсию, сначала нужно определить среднее значение набора данных. \nЗатем нужно вычислить отклонение каждого значения от среднего, возвести каждое отклонение в квадрат, \nсложить все квадраты отклонений и, наконец, разделить полученную сумму на количество значений в наборе данных.");
-            toolTip.SetToolTip(this.label4, "Левый предел функции в определённой точке — это значение, к которому стремится функция, когда переменная приближается к этой точке слева, \nто есть с меньших значений. Это помогает понять поведение функции с одной стороны от данной точки.");
-            toolTip.SetToolTip(this.label5, "Правый предел функции в определённой точке — это значение, к которому стремится функция, когда переменная приближается к этой точке справа, \nто есть с больших значений. Это помогает понять поведение функции с другой стороны от данной точки.");
-        }
-
-        private void справкаToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show("Авторы:\nИванов О.Н. \nБарановский Д.Ю. \nСитникова Елизавета ");
-        }
-
-        private void checkBox4_CheckedChanged(object sender, EventArgs e)
-        {
-            if (checkBox4.Checked == true)
-            {
-                //передаем что нарисовать и название
-                DrawChart(srznach, "Mush");
-            }
-            else //передаем название для удаления
-                chart1.Series.RemoveAt(chart1.Series.IndexOf("Mush"));
-        }
-
         private void checkBox2_CheckStateChanged(object sender, EventArgs e)
         {
             if (checkBox2.Checked == true)
@@ -378,6 +354,43 @@ namespace PSA
             else //передаем название для удаления
                 chart1.Series.RemoveAt(chart1.Series.IndexOf("rightBound"));
         }
+
+        private void checkBox4_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox4.Checked == true)
+            {
+                //передаем что нарисовать и название
+                DrawChart(srznach, "Mush");
+            }
+            else //передаем название для удаления
+                chart1.Series.RemoveAt(chart1.Series.IndexOf("Mush"));
+        }
+
+        
+
+
+        private void InitializeToolTiop()
+        {
+            toolTip = new ToolTip();
+            toolTip.AutoPopDelay = 1000000;
+            toolTip.InitialDelay = 100;
+            toolTip.ReshowDelay = 500;
+          
+            toolTip.ShowAlways = true;
+
+            toolTip.SetToolTip(this.label1, "Среднее значение, или математическое ожидание, представляет собой среднюю величину набора данных. \nЧтобы вычислить среднее значение, нужно сложить все значения в наборе данных и затем разделить полученную сумму на количество этих значений.");
+            toolTip.SetToolTip(this.label2, "Медиана — это значение, которое делит упорядоченный набор данных пополам. \nЕсли количество элементов в наборе данных нечётное, медианой будет центральный элемент. \nЕсли количество элементов чётное, медианой будет среднее значение двух центральных элементов после сортировки данных.");
+            toolTip.SetToolTip(this.label3, "Дисперсия измеряет, насколько значения в наборе данных отклоняются от среднего значения. \nЧтобы найти дисперсию, сначала нужно определить среднее значение набора данных. \nЗатем нужно вычислить отклонение каждого значения от среднего, возвести каждое отклонение в квадрат, \nсложить все квадраты отклонений и, наконец, разделить полученную сумму на количество значений в наборе данных.");
+            toolTip.SetToolTip(this.label4, "Левый предел функции в определённой точке — это значение, к которому стремится функция, когда переменная приближается к этой точке слева, \nто есть с меньших значений. Это помогает понять поведение функции с одной стороны от данной точки.");
+            toolTip.SetToolTip(this.label5, "Правый предел функции в определённой точке — это значение, к которому стремится функция, когда переменная приближается к этой точке справа, \nто есть с больших значений. Это помогает понять поведение функции с другой стороны от данной точки.");
+        }
+
+        private void справкаToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Авторы:\nИванов О.Н. \nБарановский Д.Ю. \nСитникова Е.Д. ");
+        }
+
+        
 
         
 
