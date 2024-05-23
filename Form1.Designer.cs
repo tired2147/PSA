@@ -48,6 +48,7 @@
             this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.checkBox4 = new System.Windows.Forms.CheckBox();
+            this.Form2LabelClick = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
@@ -89,6 +90,7 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.Form2LabelClick);
             this.panel1.Controls.Add(this.label6);
             this.panel1.Controls.Add(this.label5);
             this.panel1.Controls.Add(this.label4);
@@ -220,18 +222,16 @@
             this.checkBox4.Text = "Среднее значение";
             this.checkBox4.UseVisualStyleBackColor = true;
             this.checkBox4.CheckedChanged += new System.EventHandler(this.checkBox4_CheckedChanged);
-
             // 
-            // label6
+            // Form2LabelClick
             // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))));
-            this.label6.Location = new System.Drawing.Point(653, 202);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(120, 25);
-            this.label6.TabIndex = 7;
-            this.label6.Text = "Проценты";
-
+            this.Form2LabelClick.AutoSize = true;
+            this.Form2LabelClick.Location = new System.Drawing.Point(686, 417);
+            this.Form2LabelClick.Name = "Form2LabelClick";
+            this.Form2LabelClick.Size = new System.Drawing.Size(158, 13);
+            this.Form2LabelClick.TabIndex = 8;
+            this.Form2LabelClick.Text = "Найти паттерны на граффике";
+            this.Form2LabelClick.Click += new System.EventHandler(this.Form2LabelClick_Click);
             // 
             // Form1
             // 
@@ -279,7 +279,7 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.CheckBox checkBox4;
         private System.Windows.Forms.Label label6;
-
+        private System.Windows.Forms.Label Form2LabelClick;
     }
 }
 
