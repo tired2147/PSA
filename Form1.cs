@@ -40,7 +40,7 @@ namespace PSA
             checkBox2.CheckState = CheckState.Unchecked;
             checkBox3.CheckState = CheckState.Unchecked;
             checkBox4.CheckState = CheckState.Unchecked;
-
+            
             if (Data.Count > 0)
             {
                 DialogResult result = MessageBox.Show("Открыть новый файл?\nВсе подсчеты будут потеряны!.", "Сообщение",
@@ -111,7 +111,7 @@ namespace PSA
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBox.Show(ex.Message);//обработка любых исключений
                 }
             }
             
