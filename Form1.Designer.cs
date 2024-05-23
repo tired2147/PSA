@@ -220,6 +220,18 @@
             this.checkBox4.Text = "Среднее значение";
             this.checkBox4.UseVisualStyleBackColor = true;
             this.checkBox4.CheckedChanged += new System.EventHandler(this.checkBox4_CheckedChanged);
+
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))));
+            this.label6.Location = new System.Drawing.Point(653, 202);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(120, 25);
+            this.label6.TabIndex = 7;
+            this.label6.Text = "Проценты";
+
             // 
             // Form1
             // 
