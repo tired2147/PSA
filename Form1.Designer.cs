@@ -28,16 +28,16 @@
         /// </summary>
         private void InitializeComponent()
         {
-
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea6 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend6 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series6 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.менюToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.справкаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.downloadData = new System.Windows.Forms.Button();
             this.pageSetupDialog1 = new System.Windows.Forms.PageSetupDialog();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -47,13 +47,14 @@
             this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
-
             this.checkBox4 = new System.Windows.Forms.CheckBox();
-            this.label6 = new System.Windows.Forms.Label();
+            this.buttonExportDocx = new System.Windows.Forms.Button();
+            this.pageSetupDialog2 = new System.Windows.Forms.PageSetupDialog();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.buttonExportPdf = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
-
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -103,6 +104,16 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(959, 491);
             this.panel1.TabIndex = 2;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))));
+            this.label6.Location = new System.Drawing.Point(653, 202);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(120, 25);
+            this.label6.TabIndex = 7;
+            this.label6.Text = "Проценты";
             // 
             // label5
             // 
@@ -156,16 +167,16 @@
             // 
             // chart1
             // 
-            chartArea6.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea6);
-            legend6.Name = "Legend1";
-            this.chart1.Legends.Add(legend6);
+            chartArea1.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea1);
+            legend1.Name = "Legend1";
+            this.chart1.Legends.Add(legend1);
             this.chart1.Location = new System.Drawing.Point(0, 0);
             this.chart1.Name = "chart1";
-            series6.ChartArea = "ChartArea1";
-            series6.Legend = "Legend1";
-            series6.Name = "Series1";
-            this.chart1.Series.Add(series6);
+            series1.ChartArea = "ChartArea1";
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            this.chart1.Series.Add(series1);
             this.chart1.Size = new System.Drawing.Size(628, 491);
             this.chart1.TabIndex = 1;
             this.chart1.Text = "chart1";
@@ -213,24 +224,34 @@
             this.checkBox4.Text = "Среднее значение";
             this.checkBox4.UseVisualStyleBackColor = true;
             this.checkBox4.CheckedChanged += new System.EventHandler(this.checkBox4_CheckedChanged);
-
             // 
-            // label6
+            // buttonExportDocx
             // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))));
-            this.label6.Location = new System.Drawing.Point(653, 202);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(120, 25);
-            this.label6.TabIndex = 7;
-            this.label6.Text = "Проценты";
-
+            this.buttonExportDocx.Location = new System.Drawing.Point(629, 27);
+            this.buttonExportDocx.Name = "buttonExportDocx";
+            this.buttonExportDocx.Size = new System.Drawing.Size(156, 40);
+            this.buttonExportDocx.TabIndex = 7;
+            this.buttonExportDocx.Text = "Экспортировать как DOCX";
+            this.buttonExportDocx.UseVisualStyleBackColor = true;
+            this.buttonExportDocx.Click += new System.EventHandler(this.buttonExportDocx_Click);
+            // 
+            // buttonExportPdf
+            // 
+            this.buttonExportPdf.Location = new System.Drawing.Point(791, 27);
+            this.buttonExportPdf.Name = "buttonExportPdf";
+            this.buttonExportPdf.Size = new System.Drawing.Size(156, 40);
+            this.buttonExportPdf.TabIndex = 8;
+            this.buttonExportPdf.Text = "Экспортировать как PDF";
+            this.buttonExportPdf.UseVisualStyleBackColor = true;
+            this.buttonExportPdf.Click += new System.EventHandler(this.buttonExportPdf_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(998, 592);
+            this.Controls.Add(this.buttonExportPdf);
+            this.Controls.Add(this.buttonExportDocx);
             this.Controls.Add(this.checkBox4);
             this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.checkBox3);
@@ -272,7 +293,10 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.CheckBox checkBox4;
         private System.Windows.Forms.Label label6;
-
+        private System.Windows.Forms.Button buttonExportDocx;
+        private System.Windows.Forms.PageSetupDialog pageSetupDialog2;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.Button buttonExportPdf;
     }
 }
 
