@@ -61,11 +61,15 @@ namespace PSA
                     if (leftShoulder < head && rightShoulder < head && Math.Abs(leftShoulder - rightShoulder) < 0.05 * head)
                     {
                         // Найден паттерн "Голова и плечи"
+                        if (chart1.Series.IsUniqueName("Голова и плечи") == false)
+                        {
+                            chart1.Series.RemoveAt(chart1.Series.IndexOf("Голова и плечи"));
+                        }
                         Series series = new Series("Голова и плечи");
                         series.ChartType = SeriesChartType.Line;
-                        series.Points.AddXY(leftShoulderDate, leftShoulder);
-                        series.Points.AddXY(HeadDate, head);
-                        series.Points.AddXY(RightShoulderDate, rightShoulder);
+                        series.Points.AddXY(leftShoulderDate, leftShoulder+10);
+                        series.Points.AddXY(HeadDate, head+10);
+                        series.Points.AddXY(RightShoulderDate, rightShoulder+10);
                         chart1.Series.Add(series);
                     }
                 }
@@ -93,7 +97,10 @@ namespace PSA
 
                             if (Math.Abs(firstTop - secondTop) < 0.05 * firstTop)
                             {
-
+                                if (chart1.Series.IsUniqueName("Двойная вершина") == false)
+                                {
+                                    chart1.Series.RemoveAt(chart1.Series.IndexOf("Двойная вершина"));
+                                }
                                 Series series = new Series("Двойная вершина");
                                 series.ChartType = SeriesChartType.Line;
                                 series.Points.AddXY(firstTopDate, firstTop);
@@ -228,8 +235,8 @@ namespace PSA
             IsTriangle(Data);
             IsFlagOrPennant(Data);
             IsDoubleBottom(Data);
-           // IsDoubleTop(Data);
-           // HeadAndShoulders(Data);
+            IsDoubleTop(Data);
+            HeadAndShoulders(Data);
         }
     }
 }
