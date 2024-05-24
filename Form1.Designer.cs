@@ -48,10 +48,14 @@
             this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.checkBox4 = new System.Windows.Forms.CheckBox();
+
             this.buttonExportDocx = new System.Windows.Forms.Button();
             this.pageSetupDialog2 = new System.Windows.Forms.PageSetupDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.buttonExportPdf = new System.Windows.Forms.Button();
+
+            this.Form2LabelClick = new System.Windows.Forms.Label();
+
             this.menuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
@@ -93,6 +97,7 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.Form2LabelClick);
             this.panel1.Controls.Add(this.label6);
             this.panel1.Controls.Add(this.label5);
             this.panel1.Controls.Add(this.label4);
@@ -225,6 +230,7 @@
             this.checkBox4.UseVisualStyleBackColor = true;
             this.checkBox4.CheckedChanged += new System.EventHandler(this.checkBox4_CheckedChanged);
             // 
+
             // buttonExportDocx
             // 
             this.buttonExportDocx.Location = new System.Drawing.Point(629, 27);
@@ -244,6 +250,16 @@
             this.buttonExportPdf.Text = "Экспортировать как PDF";
             this.buttonExportPdf.UseVisualStyleBackColor = true;
             this.buttonExportPdf.Click += new System.EventHandler(this.buttonExportPdf_Click);
+
+            // Form2LabelClick
+            // 
+            this.Form2LabelClick.AutoSize = true;
+            this.Form2LabelClick.Location = new System.Drawing.Point(686, 417);
+            this.Form2LabelClick.Name = "Form2LabelClick";
+            this.Form2LabelClick.Size = new System.Drawing.Size(158, 13);
+            this.Form2LabelClick.TabIndex = 8;
+            this.Form2LabelClick.Text = "Найти паттерны на граффике";
+            this.Form2LabelClick.Click += new System.EventHandler(this.Form2LabelClick_Click);
             // 
             // Form1
             // 
@@ -293,10 +309,14 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.CheckBox checkBox4;
         private System.Windows.Forms.Label label6;
+
         private System.Windows.Forms.Button buttonExportDocx;
         private System.Windows.Forms.PageSetupDialog pageSetupDialog2;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.Button buttonExportPdf;
+
+        private System.Windows.Forms.Label Form2LabelClick;
+
     }
 }
 
