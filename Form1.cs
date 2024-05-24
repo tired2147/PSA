@@ -344,6 +344,24 @@ namespace PSA
                 chart1.Series.RemoveAt(chart1.Series.IndexOf("leftBound"));
         }
 
+        private void Form2LabelClick_Click(object sender, EventArgs e)
+        {
+            Form2 form2 = new Form2();
+            List<Data> NewData = new List<Data>();
+            int counter = 0;
+            foreach(var data in Data)
+            {
+                if(counter > (((Data.Count)*3)/5))
+                {
+                    NewData.Add(data);
+                }
+                
+                counter++;
+            }
+            DataBank.DataList = NewData;
+            form2.Show();
+        }
+
         private void checkBox3_CheckStateChanged(object sender, EventArgs e)
         {
             if (checkBox3.Checked == true)
