@@ -8,13 +8,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-//using iTextSharp.text;
-//using iTextSharp.text.pdf;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
 using System.IO;
 //using Microsoft.Office.Interop;
 //using Excel = Microsoft.Office.Interop.Excel;
 using System.Windows.Forms.DataVisualization.Charting;
 using System.Diagnostics;
+using Xceed.Words.NET;
+using System.Drawing;
 
 namespace PSA
 {
@@ -403,6 +405,8 @@ namespace PSA
             toolTip.SetToolTip(this.label5, "Правый предел функции в определённой точке — это значение, к которому стремится функция, когда переменная приближается к этой точке справа, \nто есть с больших значений. Это помогает понять поведение функции с другой стороны от данной точки.");
         }
 
+        
+
         private void справкаToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Авторы:\nИванов О.Н. \nБарановский Д.Ю. \nСитникова Е.Д. ");
@@ -410,7 +414,78 @@ namespace PSA
 
         
 
-        
+        private void SaveChartImage(Chart chart, string filePath)
+        {
+            chart.SaveImage(filePath, ChartImageFormat.Png);
+        }
 
+        private void ExportToDocx(string text, Chart chart, string docxPath)
+        {
+            using (MemoryStream chartStream = new MemoryStream())
+            {
+                chart1.SaveImage(chartStream, ChartImageFormat.Png);
+                chartStream.Seek(0, SeekOrigin.Begin);
+
+                var doc = DocX.Create(docxPath);
+                doc.InsertParagraph(text);
+
+                var image = doc.AddImage(chartStream);
+                var picture = image.CreatePicture();
+                doc.InsertParagraph().AppendPicture(picture);
+
+                doc.Save();
+            }
+        }
+
+        private void ExportToPdf(string text, Chart chart, string pdfPath)
+        {
+            using (MemoryStream chartStream = new MemoryStream())
+            {
+                chart1.SaveImage(chartStream, ChartImageFormat.Png);
+                chartStream.Seek(0, SeekOrigin.Begin);
+
+                using (FileStream fs = new FileStream(pdfPath, FileMode.Create, FileAccess.Write, FileShare.None))
+                {
+                    Document doc = new Document();
+                    PdfWriter writer = PdfWriter.GetInstance(doc, fs);
+                    doc.Open();
+
+                    doc.Add(new Paragraph(text));
+
+                    iTextSharp.text.Image img = iTextSharp.text.Image.GetInstance(chartStream);
+                    doc.Add(img);
+
+                    doc.Close();
+                }
+            }
+        }
+
+        private void buttonExportDocx_Click(object sender, EventArgs e)
+        {
+            using (SaveFileDialog saveFileDialog = new SaveFileDialog())
+            {
+                saveFileDialog.Filter = "Word Document|*.docx";
+                saveFileDialog.Title = "Save as Word Document";
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    string docxPath = saveFileDialog.FileName;
+                    ExportToDocx("ssss", chart1, docxPath);
+                }
+            }
+        }
+
+        private void buttonExportPdf_Click(object sender, EventArgs e)
+        {
+            using (SaveFileDialog saveFileDialog = new SaveFileDialog())
+            {
+                saveFileDialog.Filter = "PDF Document|*.pdf";
+                saveFileDialog.Title = "Save as PDF Document";
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    string pdfPath = saveFileDialog.FileName;
+                    ExportToPdf("sdsdasda", chart1, pdfPath);
+                }
+            }
+        }
     }
 }

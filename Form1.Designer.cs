@@ -48,7 +48,14 @@
             this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.checkBox4 = new System.Windows.Forms.CheckBox();
+
+            this.buttonExportDocx = new System.Windows.Forms.Button();
+            this.pageSetupDialog2 = new System.Windows.Forms.PageSetupDialog();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.buttonExportPdf = new System.Windows.Forms.Button();
+
             this.Form2LabelClick = new System.Windows.Forms.Label();
+
             this.menuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
@@ -223,6 +230,27 @@
             this.checkBox4.UseVisualStyleBackColor = true;
             this.checkBox4.CheckedChanged += new System.EventHandler(this.checkBox4_CheckedChanged);
             // 
+
+            // buttonExportDocx
+            // 
+            this.buttonExportDocx.Location = new System.Drawing.Point(629, 27);
+            this.buttonExportDocx.Name = "buttonExportDocx";
+            this.buttonExportDocx.Size = new System.Drawing.Size(156, 40);
+            this.buttonExportDocx.TabIndex = 7;
+            this.buttonExportDocx.Text = "Экспортировать как DOCX";
+            this.buttonExportDocx.UseVisualStyleBackColor = true;
+            this.buttonExportDocx.Click += new System.EventHandler(this.buttonExportDocx_Click);
+            // 
+            // buttonExportPdf
+            // 
+            this.buttonExportPdf.Location = new System.Drawing.Point(791, 27);
+            this.buttonExportPdf.Name = "buttonExportPdf";
+            this.buttonExportPdf.Size = new System.Drawing.Size(156, 40);
+            this.buttonExportPdf.TabIndex = 8;
+            this.buttonExportPdf.Text = "Экспортировать как PDF";
+            this.buttonExportPdf.UseVisualStyleBackColor = true;
+            this.buttonExportPdf.Click += new System.EventHandler(this.buttonExportPdf_Click);
+
             // Form2LabelClick
             // 
             this.Form2LabelClick.AutoSize = true;
@@ -238,6 +266,8 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(998, 592);
+            this.Controls.Add(this.buttonExportPdf);
+            this.Controls.Add(this.buttonExportDocx);
             this.Controls.Add(this.checkBox4);
             this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.checkBox3);
@@ -279,7 +309,14 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.CheckBox checkBox4;
         private System.Windows.Forms.Label label6;
+
+        private System.Windows.Forms.Button buttonExportDocx;
+        private System.Windows.Forms.PageSetupDialog pageSetupDialog2;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.Button buttonExportPdf;
+
         private System.Windows.Forms.Label Form2LabelClick;
+
     }
 }
 
