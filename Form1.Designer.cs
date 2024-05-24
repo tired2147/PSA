@@ -37,6 +37,7 @@
             this.downloadData = new System.Windows.Forms.Button();
             this.pageSetupDialog1 = new System.Windows.Forms.PageSetupDialog();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.Form2LabelClick = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
@@ -48,14 +49,10 @@
             this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.checkBox4 = new System.Windows.Forms.CheckBox();
-
             this.buttonExportDocx = new System.Windows.Forms.Button();
             this.pageSetupDialog2 = new System.Windows.Forms.PageSetupDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.buttonExportPdf = new System.Windows.Forms.Button();
-
-            this.Form2LabelClick = new System.Windows.Forms.Label();
-
             this.menuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
@@ -110,11 +107,22 @@
             this.panel1.Size = new System.Drawing.Size(959, 491);
             this.panel1.TabIndex = 2;
             // 
+            // Form2LabelClick
+            // 
+            this.Form2LabelClick.AutoSize = true;
+            this.Form2LabelClick.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Form2LabelClick.Location = new System.Drawing.Point(634, 445);
+            this.Form2LabelClick.Name = "Form2LabelClick";
+            this.Form2LabelClick.Size = new System.Drawing.Size(303, 24);
+            this.Form2LabelClick.TabIndex = 8;
+            this.Form2LabelClick.Text = "Найти паттерны на граффике";
+            this.Form2LabelClick.Click += new System.EventHandler(this.Form2LabelClick_Click);
+            // 
             // label6
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))));
-            this.label6.Location = new System.Drawing.Point(653, 202);
+            this.label6.Location = new System.Drawing.Point(651, 202);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(120, 25);
             this.label6.TabIndex = 7;
@@ -230,7 +238,6 @@
             this.checkBox4.UseVisualStyleBackColor = true;
             this.checkBox4.CheckedChanged += new System.EventHandler(this.checkBox4_CheckedChanged);
             // 
-
             // buttonExportDocx
             // 
             this.buttonExportDocx.Location = new System.Drawing.Point(629, 27);
@@ -250,16 +257,6 @@
             this.buttonExportPdf.Text = "Экспортировать как PDF";
             this.buttonExportPdf.UseVisualStyleBackColor = true;
             this.buttonExportPdf.Click += new System.EventHandler(this.buttonExportPdf_Click);
-
-            // Form2LabelClick
-            // 
-            this.Form2LabelClick.AutoSize = true;
-            this.Form2LabelClick.Location = new System.Drawing.Point(686, 417);
-            this.Form2LabelClick.Name = "Form2LabelClick";
-            this.Form2LabelClick.Size = new System.Drawing.Size(158, 13);
-            this.Form2LabelClick.TabIndex = 8;
-            this.Form2LabelClick.Text = "Найти паттерны на граффике";
-            this.Form2LabelClick.Click += new System.EventHandler(this.Form2LabelClick_Click);
             // 
             // Form1
             // 
