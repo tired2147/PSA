@@ -227,16 +227,77 @@ namespace PSA
 
             
         }
+        List<int> IndexofLocalMaximums = new List<int>();
+        private void RollingWindowAlghoritm(List<Data> DataList, int order, bool max)
+        {
+            if (max)
+            {
+                for (int i = order; i < DataList.Count - order; i++)
+                {
+                    if (CheckForNeighborsMax(DataList, i, order))
+                    {
+                        IndexofLocalMaximums.Add(i);
+                    }
+                }
+            }
+            else
+            {
+                for (int i = order; i < DataList.Count - order; i++)
+                {
+                    if (CheckForNeighborsMin(DataList, i, order))
+                    {
+                        IndexofLocalMaximums.Add(i);
+                    }
+                }
+            }
+            
+
+            foreach (int index in IndexofLocalMaximums)
+            {
+                Console.WriteLine(index + "");
+            }
+        }
+
+        private bool CheckForNeighborsMax(List<Data> dataList, int index, int order)
+        {
+            for (int i = 1; i <= order; i++)
+            {
+                if (dataList[index].Value <= dataList[index - i].Value || dataList[index].Value <= dataList[index + i].Value)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+        private bool CheckForNeighborsMin(List<Data> dataList, int index, int order)
+        {
+            for (int i = 1; i <= order; i++)
+            {
+                if (dataList[index].Value >= dataList[index - i].Value || dataList[index].Value >= dataList[index + i].Value)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
         private void Form2_Load(object sender, EventArgs e)
         {
             List<Data> Data;
             Data = DataBank.DataList;
             DrawChart(Data);
-            IsTriangle(Data);
-            IsFlagOrPennant(Data);
-            IsDoubleBottom(Data);
-            IsDoubleTop(Data);
-            HeadAndShoulders(Data);
+            int r = 0;
+            foreach (var i in Data)
+            {
+                
+                Console.WriteLine(i.Value + " " + r);
+                r++;
+            }
+            RollingWindowAlghoritm(Data, 2, false);
+            //IsTriangle(Data);
+            //IsFlagOrPennant(Data);
+            //IsDoubleBottom(Data);
+            //IsDoubleTop(Data);
+            //HeadAndShoulders(Data);
         }
     }
 }
