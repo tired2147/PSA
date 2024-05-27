@@ -210,6 +210,8 @@ namespace PSA
             //процент роста или падения акций
             double Pocents(List<Data> dataList)
             {
+                if (dataList.Count == 0)
+                    return 0;
                 double pervoeChislo = dataList.First().Value;
                 double posledneeChislo = dataList.ElementAt(dataList.Count-1).Value;
                 
