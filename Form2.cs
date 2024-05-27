@@ -227,34 +227,42 @@ namespace PSA
 
             
         }
-        List<int> IndexofLocalMaximums = new List<int>();
-        private void RollingWindowAlghoritm(List<Data> DataList, int order, bool max)
+        internal class MaxANdMins
         {
-            if (max)
+            internal int index;
+           internal DateTime MaxDate;
+            internal double maxZnach;
+            internal DateTime MinDate;
+            internal double minZnach;
+        }
+        List<MaxANdMins> IndexofLocalMaximums = new List<MaxANdMins>();
+        private void RollingWindowAlghoritm(List<Data> DataList, int order, bool inverted)
+        {
+            if (!inverted)
             {
                 for (int i = order; i < DataList.Count - order; i++)
                 {
                     if (CheckForNeighborsMax(DataList, i, order))
                     {
-                        IndexofLocalMaximums.Add(i);
+                        //IndexofLocalMaximums.Add(i);
+                        IndexofLocalMaximums.Add(new MaxANdMins {index = i, MaxDate = DataList[i].Date, maxZnach= DataList[i].Value});
+                    }
+                    if (CheckForNeighborsMin(DataList, i, order))
+                    {
+                        // IndexofLocalMaximums.Add(i);
+                        IndexofLocalMaximums.Add(new MaxANdMins { index = i, MinDate = DataList[i].Date, minZnach = DataList[i].Value });
                     }
                 }
             }
             else
             {
-                for (int i = order; i < DataList.Count - order; i++)
-                {
-                    if (CheckForNeighborsMin(DataList, i, order))
-                    {
-                        IndexofLocalMaximums.Add(i);
-                    }
-                }
+               
             }
             
 
-            foreach (int index in IndexofLocalMaximums)
+            foreach (MaxANdMins index in IndexofLocalMaximums)
             {
-                Console.WriteLine(index + "");
+                Console.WriteLine(index.index +" "+ index.MaxDate+"--"+index.maxZnach + "/ "+index.MinDate+"--"+index.minZnach);
             }
         }
 
