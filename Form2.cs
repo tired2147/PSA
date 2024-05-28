@@ -76,45 +76,45 @@ namespace PSA
         //    }
 
         //}
-        private void IsDoubleTop(List<Data> DataList)
-        {
-            // Логика для распознавания паттерна "Двойная вершина"
-            for (int i = 1; i < DataList.Count - 2; i++)
-            {
-                if (DataList[i].Value > DataList[i - 1].Value && DataList[i].Value > DataList[i + 1].Value)
-                {
-                    // Найден первый пик
-                    double firstTop = DataList[i].Value;
-                    var firstTopDate = DataList[i].Date;
+        //private void IsDoubleTop(List<Data> DataList)
+        //{
+        //    // Логика для распознавания паттерна "Двойная вершина"
+        //    for (int i = 1; i < DataList.Count - 2; i++)
+        //    {
+        //        if (DataList[i].Value > DataList[i - 1].Value && DataList[i].Value > DataList[i + 1].Value)
+        //        {
+        //            // Найден первый пик
+        //            double firstTop = DataList[i].Value;
+        //            var firstTopDate = DataList[i].Date;
 
-                    for (int j = i + 2; j < DataList.Count - 1; j++)
-                    {
-                        if (DataList[j].Value > DataList[j - 1].Value && DataList[j].Value > DataList[j + 1].Value)
-                        {
-                            // Найден второй пик
-                            double secondTop = DataList[j].Value;
-                            var SecondTopDate = DataList[j].Date;
+        //            for (int j = i + 2; j < DataList.Count - 1; j++)
+        //            {
+        //                if (DataList[j].Value > DataList[j - 1].Value && DataList[j].Value > DataList[j + 1].Value)
+        //                {
+        //                    // Найден второй пик
+        //                    double secondTop = DataList[j].Value;
+        //                    var SecondTopDate = DataList[j].Date;
 
-                            if (Math.Abs(firstTop - secondTop) < 0.05 * firstTop)
-                            {
-                                if (chart1.Series.IsUniqueName("Двойная вершина") == false)
-                                {
-                                    chart1.Series.RemoveAt(chart1.Series.IndexOf("Двойная вершина"));
-                                }
-                                Series series = new Series("Двойная вершина");
-                                series.ChartType = SeriesChartType.Line;
-                                series.Points.AddXY(firstTopDate, firstTop);
-                                series.Points.AddXY(SecondTopDate, secondTop);
-                                chart1.Series.Add(series);
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
+        //                    if (Math.Abs(firstTop - secondTop) < 0.05 * firstTop)
+        //                    {
+        //                        if (chart1.Series.IsUniqueName("Двойная вершина") == false)
+        //                        {
+        //                            chart1.Series.RemoveAt(chart1.Series.IndexOf("Двойная вершина"));
+        //                        }
+        //                        Series series = new Series("Двойная вершина");
+        //                        series.ChartType = SeriesChartType.Line;
+        //                        series.Points.AddXY(firstTopDate, firstTop);
+        //                        series.Points.AddXY(SecondTopDate, secondTop);
+        //                        chart1.Series.Add(series);
+        //                        break;
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
 
             
-        }
+        //}
 
         private void IsDoubleBottom(List<Data> DataList)
         {
@@ -226,6 +226,9 @@ namespace PSA
             }
 
             
+        }
+        private void DoubleTopAndBottom((List<Data> dataList, List<MaxANdMins> maxAndMins, bool inverted){
+
         }
         private void HeadAndShoulders(List<Data> dataList, List<MaxANdMins> maxAndMins, bool inverted)
         {
@@ -407,7 +410,7 @@ namespace PSA
             List<Data> Data;
             Data = DataBank.DataList;
             DrawChart(Data);
-            RollingWindowAlghoritm(Data, 1);
+            RollingWindowAlghoritm(Data, 4);
             HeadAndShoulders(Data, IndexofLocalMaximums, true);
             HeadAndShoulders(Data, IndexofLocalMaximums, false);
             //RollingWindowAlghoritm(Data, 2);
