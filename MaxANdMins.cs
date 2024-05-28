@@ -9,9 +9,8 @@ namespace PSA
     internal class MaxANdMins
     {
         internal int index;
-        internal DateTime MaxDate;
-        internal double maxZnach;
-        internal DateTime MinDate;
-        internal double minZnach;
+        internal DateTime Date;
+        internal double Znach;
+        internal bool max;
     }
 }

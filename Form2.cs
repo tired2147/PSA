@@ -229,14 +229,15 @@ namespace PSA
         }
         private void HeadAndShoulders(List<Data> dataList, List<MaxANdMins> maxAndMins, bool inverted)
         {
-            RollingWindowAlghoritm(dataList, 3);
+            
 
             int counter = 0;
            for(int a = 0; a < maxAndMins.Count-1; a++)
             {
                 
-                if ((maxAndMins[a].maxZnach == 0 && maxAndMins[a + 1].maxZnach == 0) || (maxAndMins[a].maxZnach != 0 && maxAndMins[a + 1].maxZnach != 0))
+                if ((maxAndMins[a].max == true && maxAndMins[a+1].max == true)||(maxAndMins[a].max == false && maxAndMins[a+1].max == false))
                 {
+                    
                     counter = 0;                   
                 }
                 else
@@ -245,21 +246,21 @@ namespace PSA
                 }
                 if (inverted)
                 {
-                    if (counter >= 6 && maxAndMins[a].maxZnach != 0)
+                    if (counter >= 7 && maxAndMins[a].max == true)
                     {
-                        
-                        counter -= 1;
-                        var low1 = maxAndMins[a].maxZnach;
-                        var leftShoulder = maxAndMins[a + 1].minZnach;
-                        var leftArmpit = maxAndMins[a + 2].maxZnach;
-                        var Head = maxAndMins[a + 3].minZnach;
-                        var RightArmpit = maxAndMins[a + 4].maxZnach;
-                        var RightShoulder = maxAndMins[a + 5].minZnach;
-                        var low2 = maxAndMins[a + 6].maxZnach;
+                        //перевернута, поэтому плечи и подмышки поменяны по значению.
+                        counter -= 2;
+                        var low1 = maxAndMins[a - 6].Znach; //max
+                        var leftShoulder = maxAndMins[a - 5].Znach; //min
+                        var leftArmpit = maxAndMins[a - 4].Znach; //max
+                        var Head = maxAndMins[a - 3].Znach; //min
+                        var RightArmpit = maxAndMins[a - 2].Znach; //max
+                        var RightShoulder = maxAndMins[a - 1].Znach; //min
+                        var low2 = maxAndMins[a].Znach; // max
                         //proverka na golovu i plechi
-                        if (leftShoulder > Head && RightShoulder > Head)
+                        if (leftShoulder > Head && RightShoulder > Head && Math.Abs(leftShoulder - RightShoulder) < 0.05 * Head &&(leftArmpit<min(low1,low2) && RightArmpit< min(low1, low2)))
                         {
-                            Console.WriteLine("abc");
+
                             
                             //proverka na raztyanutosty
                             // if (Math.Abs(leftShoulder - rightShoulder) < 0.05 * head)
@@ -271,14 +272,14 @@ namespace PSA
                             }
                             Series series = new Series("Перевернутая голова и плечи");
                             series.ChartType = SeriesChartType.Line;
-                            series.Points.AddXY(maxAndMins[a].MaxDate, low1);
-                            series.Points.AddXY(maxAndMins[a + 1].MinDate, leftShoulder);
-                            series.Points.AddXY(maxAndMins[a + 2].MaxDate, leftArmpit);
-                            series.Points.AddXY(maxAndMins[a + 3].MinDate, Head);
-                            series.Points.AddXY(maxAndMins[a + 4].MaxDate, RightArmpit);
-                            series.Points.AddXY(maxAndMins[a + 5].MinDate, RightShoulder);
-                            series.Points.AddXY(maxAndMins[a + 6].MaxDate, low2);
-                            series.Points.AddXY(maxAndMins[a].MaxDate, low1);
+                            series.Points.AddXY(maxAndMins[a - 6].Date, low1);
+                            series.Points.AddXY(maxAndMins[a - 5].Date, leftShoulder);
+                            series.Points.AddXY(maxAndMins[a - 4].Date, leftArmpit);
+                            series.Points.AddXY(maxAndMins[a - 3].Date, Head);
+                            series.Points.AddXY(maxAndMins[a - 2].Date, RightArmpit);
+                            series.Points.AddXY(maxAndMins[a - 1].Date, RightShoulder);
+                            series.Points.AddXY(maxAndMins[a].Date, low2);
+                            series.Points.AddXY(maxAndMins[a - 6].Date, low1);
                             chart1.Series.Add(series);
 
                             //}
@@ -288,43 +289,43 @@ namespace PSA
                 }
                 else
                 {
-                    if (counter >= 6 && maxAndMins[a].minZnach != 0)
+                    if (counter >= 7 && maxAndMins[a].max == false)
                     {
                         
                         counter -=2 ;
-                        var low1 = maxAndMins[a].minZnach;
-                        var leftShoulder = maxAndMins[a + 1].maxZnach;
-                        var leftArmpit = maxAndMins[a + 2].minZnach;
-                        var Head = maxAndMins[a + 3].maxZnach;
-                        var RightArmpit = maxAndMins[a + 4].minZnach;
-                        var RightShoulder = maxAndMins[a + 5].maxZnach;
-                        var low2 = maxAndMins[a + 6].minZnach;
+                        var low1 = maxAndMins[a  - 6].Znach;
+                        var leftShoulder = maxAndMins[a - 5].Znach;
+                        var leftArmpit = maxAndMins[a - 4].Znach;
+                        var Head = maxAndMins[a - 3].Znach;
+                        var RightArmpit = maxAndMins[a - 2].Znach;
+                        var RightShoulder = maxAndMins[a - 1].Znach;
+                        var low2 = maxAndMins[a].Znach;
                         //proverka na golovu i plechi
                         if (leftShoulder < Head && RightShoulder < Head)
                         {
-                            Console.WriteLine("abc");
-                            Console.WriteLine(low1+"-" + leftShoulder +"-"+ leftArmpit + "-" + Head + "-" + RightArmpit + "-" + RightShoulder + "-" + low2 + "-");
+                            //Console.WriteLine("abc");
+                            //Console.WriteLine(low1+"-" + leftShoulder +"-"+ leftArmpit + "-" + Head + "-" + RightArmpit + "-" + RightShoulder + "-" + low2 + "-");
                             //proverka na raztyanutosty
-                            // if (Math.Abs(leftShoulder - rightShoulder) < 0.05 * head)
-                            //{
-                            // Найден паттерн "Голова и плечи"
-                            if (chart1.Series.IsUniqueName("Голова и плечи") == false)
+                            if (Math.Abs(leftShoulder - RightShoulder) < 0.05 * Head && (leftArmpit > max(low1,low2) && RightArmpit > max(low1, low2)))
                             {
-                                chart1.Series.RemoveAt(chart1.Series.IndexOf("Голова и плечи"));
+                                
+                                if (chart1.Series.IsUniqueName("Голова и плечи") == false)
+                                {
+                                    chart1.Series.RemoveAt(chart1.Series.IndexOf("Голова и плечи"));
+                                }
+                                Series series = new Series("Голова и плечи");
+                                series.ChartType = SeriesChartType.Line;
+                                series.Points.AddXY(maxAndMins[a - 6].Date, low1);
+                                series.Points.AddXY(maxAndMins[a - 5].Date, leftShoulder);
+                                series.Points.AddXY(maxAndMins[a - 4].Date, leftArmpit);
+                                series.Points.AddXY(maxAndMins[a - 3].Date, Head);
+                                series.Points.AddXY(maxAndMins[a - 2].Date, RightArmpit);
+                                series.Points.AddXY(maxAndMins[a - 1].Date, RightShoulder);
+                                series.Points.AddXY(maxAndMins[a].Date, low2);
+                                series.Points.AddXY(maxAndMins[a - 6].Date, low1);
+                                chart1.Series.Add(series);
+                                counter = 0;
                             }
-                            Series series = new Series("Голова и плечи");
-                            series.ChartType = SeriesChartType.Line;
-                            series.Points.AddXY(maxAndMins[a].MinDate, low1);
-                            series.Points.AddXY(maxAndMins[a + 1].MaxDate, leftShoulder);
-                            series.Points.AddXY(maxAndMins[a + 2].MinDate, leftArmpit);
-                            series.Points.AddXY(maxAndMins[a + 3].MaxDate, Head);
-                            series.Points.AddXY(maxAndMins[a + 4].MinDate, RightArmpit);
-                            series.Points.AddXY(maxAndMins[a + 5].MaxDate, RightShoulder);
-                            series.Points.AddXY(maxAndMins[a + 6].MinDate, low2);
-                            series.Points.AddXY(maxAndMins[a].MinDate, low1);
-                            chart1.Series.Add(series);
-                            counter = 0;
-                            //}
                         }
 
                     }
@@ -335,6 +336,27 @@ namespace PSA
             
         }
         List<MaxANdMins> IndexofLocalMaximums = new List<MaxANdMins>();
+        private double max(double a, double b)
+        {
+            if(a >b)
+            {
+                return a;
+            }
+            else {
+                return b;
+            }
+        }
+        private double min(double a, double b)
+        {
+            if (a < b)
+            {
+                return a;
+            }
+            else
+            {
+                return b;
+            }
+        }
         private void RollingWindowAlghoritm(List<Data> DataList, int order)
         {
             
@@ -343,17 +365,17 @@ namespace PSA
                     if (CheckForNeighborsMax(DataList, i, order))
                     {
                         //IndexofLocalMaximums.Add(i);
-                        IndexofLocalMaximums.Add(new MaxANdMins {index = i, MaxDate = DataList[i].Date, maxZnach= DataList[i].Value});
+                        IndexofLocalMaximums.Add(new MaxANdMins {index = i, Date = DataList[i].Date, Znach = DataList[i].Value, max=true});
                     }
                     if (CheckForNeighborsMin(DataList, i, order))
                     {
                         // IndexofLocalMaximums.Add(i);
-                        IndexofLocalMaximums.Add(new MaxANdMins { index = i, MinDate = DataList[i].Date, minZnach = DataList[i].Value });
+                        IndexofLocalMaximums.Add(new MaxANdMins { index = i, Date = DataList[i].Date, Znach = DataList[i].Value, max = false });
                     }
                 }
             //foreach (MaxANdMins index in IndexofLocalMaximums)
             //{
-            //    Console.WriteLine(index.index +" "+ index.MaxDate+"--"+index.maxZnach + " / "+index.MinDate+"--"+index.minZnach);
+            //    Console.WriteLine(index.index + "--- " + index.Date + "--" + index.Znach + "--" + index.max + "--");
             //}
 
         }
@@ -385,8 +407,8 @@ namespace PSA
             List<Data> Data;
             Data = DataBank.DataList;
             DrawChart(Data);
-            
-            //HeadAndShoulders(Data, IndexofLocalMaximums, true);
+            RollingWindowAlghoritm(Data, 1);
+            HeadAndShoulders(Data, IndexofLocalMaximums, true);
             HeadAndShoulders(Data, IndexofLocalMaximums, false);
             //RollingWindowAlghoritm(Data, 2);
             //IsTriangle(Data);
