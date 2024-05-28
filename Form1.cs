@@ -415,10 +415,7 @@ namespace PSA
 
         
 
-        private void справкаToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show("Авторы:\nИванов О.Н. \nБарановский Д.Ю. \nСитникова Е.Д. ");
-        }
+        
 
         private void ExportToDocx(string text, Chart chart, string docxPath)
         {
@@ -518,6 +515,29 @@ namespace PSA
                     ExportToPdf("sdsdasda", chart1, pdfPath);
                 }
             }
+        }
+
+
+
+
+        private void справкаToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Авторы:\nИванов О.Н. \nБарановский Д.Ю. \nСитникова Е.Д. ");
+        }
+
+        private void загрузитьToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            downloadData_Click(sender, e);
+        }
+
+        private void какPDFToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            buttonExportPdf_Click(sender, e);
+        }
+
+        private void какDOCXToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            buttonExportDocx_Click(sender, e);
         }
     }
 }
