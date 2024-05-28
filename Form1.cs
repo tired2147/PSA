@@ -31,7 +31,7 @@ namespace PSA
         }
 
         List<Data> Data = new List<Data>();
-        double median, leftBound, rightBound, srznach, proc;
+        double median, leftBound, rightBound, srznach, proc, soprotivlenie, podderjka;
 
 
 
@@ -189,7 +189,7 @@ namespace PSA
                     sumOfSquares += Math.Pow(data.Value - mean, 2);
                 }
 
-                return sumOfSquares / dataList.Count;
+                return dataList.Count > 1 ? sumOfSquares / (dataList.Count - 1) : 0;
             }
 
             //левый предел
@@ -231,26 +231,63 @@ namespace PSA
             srznach = CalculateMean(Data);
             proc = Pocents(Data);
 
-            //относительная частота
-            Dictionary<double, double> CalculateRelativeFrequency(List<Data> dataList)
-            {
-                Dictionary<double, double> frequencyMap = new Dictionary<double, double>();
-                int totalCount = dataList.Count;
+            ////относительная частота
+            //Dictionary<double, double> CalculateRelativeFrequency(List<Data> dataList)
+            //{
+            //    Dictionary<double, double> frequencyMap = new Dictionary<double, double>();
+            //    int totalCount = dataList.Count;
 
-                foreach (var data in dataList)
+            //    foreach (var data in dataList)
+            //    {
+            //        if (frequencyMap.ContainsKey(data.Value))
+            //        {
+            //            frequencyMap[data.Value] += 1.0 / totalCount;
+            //        }
+            //        else
+            //        {
+            //            frequencyMap[data.Value] = 1.0 / totalCount;
+            //        }
+            //    }
+
+            //    return frequencyMap;
+            //}
+
+            // Метод для нахождения локальных максимумов
+            List<double> FindLocalMaxima(List<Data> dataList)
+            {
+                List<double> localMaxima = new List<double>();
+
+                for (int i = 1; i < dataList.Count - 1; i++)
                 {
-                    if (frequencyMap.ContainsKey(data.Value))
+                    if (dataList[i].Value > dataList[i - 1].Value && dataList[i].Value > dataList[i + 1].Value)
                     {
-                        frequencyMap[data.Value] += 1.0 / totalCount;
-                    }
-                    else
-                    {
-                        frequencyMap[data.Value] = 1.0 / totalCount;
+                        localMaxima.Add(dataList[i].Value);
                     }
                 }
 
-                return frequencyMap;
+                return localMaxima;
             }
+            double FindResistanceLevel(List<Data> dataList)
+            {
+                if (dataList == null || dataList.Count < 3)
+                    throw new ArgumentException("Data list must contain at least 3 data points to find local maxima");
+
+                // Находим локальные максимумы
+                List<double> localMaxima = FindLocalMaxima(dataList);
+
+                if (localMaxima.Count == 0)
+                    throw new InvalidOperationException("No local maxima found in the data list");
+
+                // Рассчитываем среднее значение локальных максимумов как уровень сопротивления
+                double resistanceLevel = localMaxima.Average();
+                return resistanceLevel;
+            }
+
+            soprotivlenie = FindResistanceLevel(Data);
+
+
+
+
 
             label1.Text = Math.Round(CalculateMean(Data), 2).ToString(); 
             label2.Text = Math.Round(CalculateMedian(Data), 2).ToString();
@@ -268,8 +305,8 @@ namespace PSA
                 label6.ForeColor = System.Drawing.Color.Red;
                 
             }
-            
 
+            
 
 
             //Console.WriteLine(CalculateMean(Data) + "        " + CalculateMedian(Data)
@@ -354,24 +391,7 @@ namespace PSA
                 chart1.Series.RemoveAt(chart1.Series.IndexOf("leftBound"));
         }
 
-        private void Form2LabelClick_Click(object sender, EventArgs e)
-        {
-            Form2 form2 = new Form2();
-            List<Data> NewData = new List<Data>();
-            int counter = 0;
-            foreach(var data in Data)
-            {
-                if(counter > (((Data.Count)*3)/5))
-                {
-                    NewData.Add(data);
-                }
-                
-                counter++;
-            }
-            DataBank.DataList = NewData;
-            form2.Show();
-        }
-
+        
         private void checkBox3_CheckStateChanged(object sender, EventArgs e)
         {
             if (checkBox3.Checked == true)
@@ -419,74 +439,88 @@ namespace PSA
 
         private void ExportToDocx(string text, Chart chart, string docxPath)
         {
-            // Создаем объект приложения Word
-            var wordApp = new Word.Application();
-            wordApp.Visible = false; // Сделайте Word видимым, если нужно
-
-            // Создаем новый документ
-            var document = wordApp.Documents.Add();
-
-            // Добавляем текст в документ
-            Word.Paragraph para = document.Paragraphs.Add();
-            para.Range.Text = text;
-            para.Range.InsertParagraphAfter();
-
-            // Сохраняем график в MemoryStream
-            using (MemoryStream chartStream = new MemoryStream())
+            try
             {
-                chart.SaveImage(chartStream, ChartImageFormat.Png);
-                chartStream.Seek(0, SeekOrigin.Begin);
+                // Создаем объект приложения Word
+                var wordApp = new Word.Application();
+                wordApp.Visible = false; // Сделайте Word видимым, если нужно
 
-                // Загружаем изображение из MemoryStream в Interop.PictureDisp
-                var image = System.Drawing.Image.FromStream(chartStream);
-                var tempImagePath = Path.GetTempFileName();
-                image.Save(tempImagePath, ImageFormat.Png);
+                // Создаем новый документ
+                var document = wordApp.Documents.Add();
 
-                // Вставляем изображение графика в документ
-                Word.Paragraph imagePara = document.Paragraphs.Add();
-                imagePara.Range.InlineShapes.AddPicture(tempImagePath);
-                imagePara.Range.InsertParagraphAfter();
+                // Добавляем текст в документ
+                Word.Paragraph para = document.Paragraphs.Add();
+                para.Range.Text = text;
+                para.Range.InsertParagraphAfter();
 
-                // Удаляем временный файл
-                if (File.Exists(tempImagePath))
+                // Сохраняем график в MemoryStream
+                using (MemoryStream chartStream = new MemoryStream())
                 {
-                    File.Delete(tempImagePath);
+                    chart.SaveImage(chartStream, ChartImageFormat.Png);
+                    chartStream.Seek(0, SeekOrigin.Begin);
+
+                    // Загружаем изображение из MemoryStream в Interop.PictureDisp
+                    var image = System.Drawing.Image.FromStream(chartStream);
+                    var tempImagePath = Path.GetTempFileName();
+                    image.Save(tempImagePath, ImageFormat.Png);
+
+                    // Вставляем изображение графика в документ
+                    Word.Paragraph imagePara = document.Paragraphs.Add();
+                    imagePara.Range.InlineShapes.AddPicture(tempImagePath);
+                    imagePara.Range.InsertParagraphAfter();
+
+                    // Удаляем временный файл
+                    if (File.Exists(tempImagePath))
+                    {
+                        File.Delete(tempImagePath);
+                    }
                 }
+
+                // Сохраняем документ
+                document.SaveAs2(docxPath);
+
+                // Закрываем документ и приложение Word
+                document.Close();
+                wordApp.Quit();
+
+                MessageBox.Show("Документ успешно создан!");
             }
-
-            // Сохраняем документ
-            document.SaveAs2(docxPath);
-
-            // Закрываем документ и приложение Word
-            document.Close();
-            wordApp.Quit();
-
-            MessageBox.Show("Документ успешно создан!");
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void ExportToPdf(string text, Chart chart, string pdfPath)
         {
-            using (MemoryStream chartStream = new MemoryStream())
+            try
             {
-                chart1.SaveImage(chartStream, ChartImageFormat.Png);
-                chartStream.Seek(0, SeekOrigin.Begin);
-
-                using (FileStream fs = new FileStream(pdfPath, FileMode.Create, FileAccess.Write, FileShare.None))
+                using (MemoryStream chartStream = new MemoryStream())
                 {
-                    Document doc = new Document();
-                    PdfWriter writer = PdfWriter.GetInstance(doc, fs);
-                    
-                    doc.Open();
+                    chart1.SaveImage(chartStream, ChartImageFormat.Png);
+                    chartStream.Seek(0, SeekOrigin.Begin);
 
-                    doc.Add(new Paragraph(text));
+                    using (FileStream fs = new FileStream(pdfPath, FileMode.Create, FileAccess.Write, FileShare.None))
+                    {
+                        Document doc = new Document();
+                        PdfWriter writer = PdfWriter.GetInstance(doc, fs);
 
-                    iTextSharp.text.Image img = iTextSharp.text.Image.GetInstance(chartStream);
-                    doc.Add(img);
+                        doc.Open();
 
-                    doc.Close();
+                        doc.Add(new Paragraph(text));
+
+                        iTextSharp.text.Image img = iTextSharp.text.Image.GetInstance(chartStream);
+                        doc.Add(img);
+
+                        doc.Close();
+                    }
                 }
+                MessageBox.Show("Документ успешно создан!");
             }
-            MessageBox.Show("Документ успешно создан!");
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void buttonExportDocx_Click(object sender, EventArgs e)
@@ -515,6 +549,27 @@ namespace PSA
                     ExportToPdf("sdsdasda", chart1, pdfPath);
                 }
             }
+        }
+
+
+
+
+        private void Form2LabelClick_Click(object sender, EventArgs e)
+        {
+            Form2 form2 = new Form2();
+            List<Data> NewData = new List<Data>();
+            int counter = 0;
+            foreach (var data in Data)
+            {
+                if (counter > (((Data.Count) * 3) / 5))
+                {
+                    NewData.Add(data);
+                }
+
+                counter++;
+            }
+            DataBank.DataList = NewData;
+            form2.Show();
         }
 
 
