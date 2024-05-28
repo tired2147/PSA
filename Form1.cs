@@ -11,12 +11,12 @@ using System.Windows.Forms;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using System.IO;
-//using Microsoft.Office.Interop;
-//using Excel = Microsoft.Office.Interop.Excel;
 using System.Windows.Forms.DataVisualization.Charting;
 using System.Diagnostics;
-using Xceed.Words.NET;
-using System.Drawing;
+using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Packaging;
+using Word = Microsoft.Office.Interop.Word;
+using System.Drawing.Imaging;
 
 namespace PSA
 {
@@ -49,16 +49,17 @@ namespace PSA
                  MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (result == DialogResult.Yes)
                 {
+                    Data.Clear();
+                    chart1.Series.Clear();
+                    label1.Text = ""; label2.Text = ""; label3.Text = ""; label4.Text = ""; label5.Text = ""; label6.Text = "";
                     OpenFile();
-
+                    
                 }
 
             }
             else
             {
                 OpenFile();
-
-
             }
         }
         private void OpenFile()
@@ -212,6 +213,7 @@ namespace PSA
             {
                 if (dataList.Count == 0)
                     return 0;
+
                 double pervoeChislo = dataList.First().Value;
                 double posledneeChislo = dataList.ElementAt(dataList.Count-1).Value;
                 
@@ -250,20 +252,20 @@ namespace PSA
                 return frequencyMap;
             }
 
-            label1.Text = "Среднее значение: " + Math.Round(CalculateMean(Data), 2);
-            label2.Text = "Медиана: " + Math.Round(CalculateMedian(Data), 2);
-            label3.Text = "Дисперсия: " + Math.Round(CalculateVariance(Data), 2);
-            label4.Text = "Левый предел: " + Math.Round(CalculateLeftBound(Data), 2);
-            label5.Text = "Правый предел: " + Math.Round(CalculateRightBound(Data), 2);
-            if (proc>0)
+            label1.Text = Math.Round(CalculateMean(Data), 2).ToString(); 
+            label2.Text = Math.Round(CalculateMedian(Data), 2).ToString();
+            label3.Text = Math.Round(CalculateVariance(Data), 2).ToString();
+            label4.Text = Math.Round(CalculateLeftBound(Data), 2).ToString();
+            label5.Text = Math.Round(CalculateRightBound(Data), 2).ToString();
+            if (proc > 0)
             {
-                label6.Text = "Акции выросли на: " + Math.Round(proc, 2)+ "%";
-                label6.ForeColor = Color.Green;
+                label6.Text = "⬆" + Math.Round(proc, 2)+ "%";
+                label6.ForeColor = System.Drawing.Color.Green;
             }
             else
             {
-                label6.Text = "Акции упали на: " + Math.Round(-proc, 2) + "%";
-                label6.ForeColor = Color.Red;
+                label6.Text = "⬇" + Math.Round(-proc, 2) + "%";
+                label6.ForeColor = System.Drawing.Color.Red;
                 
             }
             
@@ -290,6 +292,9 @@ namespace PSA
             // Создать новую серию данных для графика
             Series series = new Series("stocks");
             series.ChartType = SeriesChartType.Line; // Выбрать тип графика (линейный)
+            series.BorderWidth = 4; //толщина линии
+            series.Color = Color.DarkRed;
+            
 
             // Добавить данные в серию
             foreach (var data in DataList)
@@ -306,6 +311,7 @@ namespace PSA
             // Создать новую серию данных для графика
             Series series = new Series(nazvanie);
             series.ChartType = SeriesChartType.Line; // Выбрать тип графика (линейный)
+            series.BorderWidth = 2;
 
             // Добавить данные в серию
             foreach (var data in Data)
@@ -322,7 +328,7 @@ namespace PSA
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            
         }
 
 
@@ -382,10 +388,10 @@ namespace PSA
             if (checkBox4.Checked == true)
             {
                 //передаем что нарисовать и название
-                DrawChart(srznach, "Mush");
+                DrawChart(srznach, "mush");
             }
             else //передаем название для удаления
-                chart1.Series.RemoveAt(chart1.Series.IndexOf("Mush"));
+                chart1.Series.RemoveAt(chart1.Series.IndexOf("mush"));
         }
 
         
@@ -409,34 +415,53 @@ namespace PSA
 
         
 
-        private void справкаToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show("Авторы:\nИванов О.Н. \nБарановский Д.Ю. \nСитникова Е.Д. ");
-        }
-
         
-
-        private void SaveChartImage(Chart chart, string filePath)
-        {
-            chart.SaveImage(filePath, ChartImageFormat.Png);
-        }
 
         private void ExportToDocx(string text, Chart chart, string docxPath)
         {
+            // Создаем объект приложения Word
+            var wordApp = new Word.Application();
+            wordApp.Visible = false; // Сделайте Word видимым, если нужно
+
+            // Создаем новый документ
+            var document = wordApp.Documents.Add();
+
+            // Добавляем текст в документ
+            Word.Paragraph para = document.Paragraphs.Add();
+            para.Range.Text = text;
+            para.Range.InsertParagraphAfter();
+
+            // Сохраняем график в MemoryStream
             using (MemoryStream chartStream = new MemoryStream())
             {
-                chart1.SaveImage(chartStream, ChartImageFormat.Png);
+                chart.SaveImage(chartStream, ChartImageFormat.Png);
                 chartStream.Seek(0, SeekOrigin.Begin);
 
-                var doc = DocX.Create(docxPath);
-                doc.InsertParagraph(text);
+                // Загружаем изображение из MemoryStream в Interop.PictureDisp
+                var image = System.Drawing.Image.FromStream(chartStream);
+                var tempImagePath = Path.GetTempFileName();
+                image.Save(tempImagePath, ImageFormat.Png);
 
-                var image = doc.AddImage(chartStream);
-                var picture = image.CreatePicture();
-                doc.InsertParagraph().AppendPicture(picture);
+                // Вставляем изображение графика в документ
+                Word.Paragraph imagePara = document.Paragraphs.Add();
+                imagePara.Range.InlineShapes.AddPicture(tempImagePath);
+                imagePara.Range.InsertParagraphAfter();
 
-                doc.Save();
+                // Удаляем временный файл
+                if (File.Exists(tempImagePath))
+                {
+                    File.Delete(tempImagePath);
+                }
             }
+
+            // Сохраняем документ
+            document.SaveAs2(docxPath);
+
+            // Закрываем документ и приложение Word
+            document.Close();
+            wordApp.Quit();
+
+            MessageBox.Show("Документ успешно создан!");
         }
 
         private void ExportToPdf(string text, Chart chart, string pdfPath)
@@ -450,6 +475,7 @@ namespace PSA
                 {
                     Document doc = new Document();
                     PdfWriter writer = PdfWriter.GetInstance(doc, fs);
+                    
                     doc.Open();
 
                     doc.Add(new Paragraph(text));
@@ -460,6 +486,7 @@ namespace PSA
                     doc.Close();
                 }
             }
+            MessageBox.Show("Документ успешно создан!");
         }
 
         private void buttonExportDocx_Click(object sender, EventArgs e)
@@ -488,6 +515,29 @@ namespace PSA
                     ExportToPdf("sdsdasda", chart1, pdfPath);
                 }
             }
+        }
+
+
+
+
+        private void справкаToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Авторы:\nИванов О.Н. \nБарановский Д.Ю. \nСитникова Е.Д. ");
+        }
+
+        private void загрузитьToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            downloadData_Click(sender, e);
+        }
+
+        private void какPDFToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            buttonExportPdf_Click(sender, e);
+        }
+
+        private void какDOCXToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            buttonExportDocx_Click(sender, e);
         }
     }
 }
