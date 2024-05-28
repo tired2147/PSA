@@ -361,7 +361,7 @@ namespace PSA
             int counter = 0;
             foreach(var data in Data)
             {
-                if(counter > (((Data.Count)*3)/5))
+                if(counter > (((Data.Count)*88)/100))
                 {
                     NewData.Add(data);
                 }

@@ -227,9 +227,101 @@ namespace PSA
 
             
         }
-        //private void DoubleTopAndBottom((List<Data> dataList, List<MaxANdMins> maxAndMins, bool inverted){
+        private void DoubleTopAndBottom(List<Data> dataList, List<MaxANdMins> maxAndMins, bool inverted){
+            int counter = 0;
+            for (int a = 0; a < maxAndMins.Count - 1; a++)
+            {
+                if ((maxAndMins[a].max == true && maxAndMins[a + 1].max == true) || (maxAndMins[a].max == false && maxAndMins[a + 1].max == false))
+                {
+                    counter = 0;
+                }
+                else
+                {
+                    counter++;
+                }
+                
+                
+                    if (inverted)
+                    {
+                        if (counter >= 5 && maxAndMins[a].max == true)
+                        {
+                            counter -= 2;
+                            var min1 = maxAndMins[a - 4]; //max
+                            var max1 = maxAndMins[a - 3]; //min
+                            var min2 = maxAndMins[a - 2]; //max
+                            var max2 = maxAndMins[a - 1]; //min
+                            var min3 = maxAndMins[a]; //max
+                            var maxmax = max(max1.Znach, max2.Znach);
+                            var minmax = min(max1.Znach, max2.Znach);
+                            if ((((maxmax - minmax) / maxmax) * 100 <= 3) && min1.Znach > min2.Znach && min3.Znach > min2.Znach)
+                            //Console.WriteLine((((maxmax - minmax) / maxmax) * 100) + " - Pocents"+ maxmax+" - maxmax"+minmax+" - minmax");
+                            {
+                                counter = 0;
+                                if (chart1.Series.IsUniqueName("Перевернутая двойная вершина") == false)
+                                {
+                                    chart1.Series.RemoveAt(chart1.Series.IndexOf("Перевернутая двойная вершина"));
+                                }
+                                if (chart1.Series.IsUniqueName("шея") == false)
+                                {
+                                    chart1.Series.RemoveAt(chart1.Series.IndexOf("шея"));
+                                }
+                                Series series = new Series("Перевернутая двойная вершина");
+                                Series series1 = new Series("шея");
+                                series.ChartType = SeriesChartType.Line;
+                                series1.ChartType = SeriesChartType.Line;
+                                series.Points.AddXY(min1.Date, min1.Znach);
+                                series.Points.AddXY(max1.Date, max1.Znach);
+                                series.Points.AddXY(min2.Date, min2.Znach);
+                                series.Points.AddXY(max2.Date, max2.Znach);
+                                series.Points.AddXY(min3.Date, min3.Znach);
+                                series1.Points.AddXY(min2.Date, min2.Znach);
+                                chart1.Series.Add(series);
+                                // chart1.Series.Add(series1);
+                            }
+                    }
+                        
+                    }
+                    else
+                    {
+                        if (counter >= 5 && maxAndMins[a].max == false)
+                        {
+                        counter -= 2;
+                        var min1 = maxAndMins[a - 4];
+                        var max1 = maxAndMins[a - 3];
+                        var min2 = maxAndMins[a - 2];
+                        var max2 = maxAndMins[a - 1];
+                        var min3 = maxAndMins[a];
+                        var maxmax = max(max1.Znach, max2.Znach);
+                        var minmax = min(max1.Znach, max2.Znach);
+                        if ((((maxmax - minmax) / maxmax) * 100 <= 3) && min1.Znach < min2.Znach && min3.Znach < min2.Znach)
+                        {
+                            counter = 0;
+                            if (chart1.Series.IsUniqueName("Двойная вершина") == false)
+                            {
+                                chart1.Series.RemoveAt(chart1.Series.IndexOf("Двойная вершина"));
+                            }
+                            Series series = new Series("Двойная вершина");
+                            series.BorderWidth = 2;
+                            series.ChartType = SeriesChartType.Line;
 
-        //}
+                            series.Points.AddXY(min1.Date, min1.Znach);
+                            series.Points.AddXY(max1.Date, max1.Znach);
+                            series.Points.AddXY(min2.Date, min2.Znach);
+                            series.Points.AddXY(max2.Date, max2.Znach);
+                            series.Points.AddXY(min3.Date, min3.Znach);
+                            chart1.Series.Add(series);
+
+
+
+
+                        }
+                    }
+                        
+                    }
+                    
+                
+            }
+        }
         private void HeadAndShoulders(List<Data> dataList, List<MaxANdMins> maxAndMins, bool inverted)
         {
             
@@ -261,7 +353,7 @@ namespace PSA
                         var RightShoulder = maxAndMins[a - 1].Znach; //min
                         var low2 = maxAndMins[a].Znach; // max
                         //proverka na golovu i plechi
-                        if (leftShoulder > Head && RightShoulder > Head && Math.Abs(leftShoulder - RightShoulder) < 0.05 * Head &&(leftArmpit<min(low1,low2) && RightArmpit< min(low1, low2)))
+                        if (leftShoulder > Head && RightShoulder > Head && Math.Abs(leftShoulder - RightShoulder) < 0.05 * Head &&(leftArmpit< min(low1,low2) && RightArmpit < min(low1, low2)))
                         {
 
                             
@@ -284,6 +376,8 @@ namespace PSA
                             series.Points.AddXY(maxAndMins[a].Date, low2);
                             series.Points.AddXY(maxAndMins[a - 6].Date, low1);
                             chart1.Series.Add(series);
+
+                           
 
                             //}
                         }
@@ -309,7 +403,7 @@ namespace PSA
                             //Console.WriteLine("abc");
                             //Console.WriteLine(low1+"-" + leftShoulder +"-"+ leftArmpit + "-" + Head + "-" + RightArmpit + "-" + RightShoulder + "-" + low2 + "-");
                             //proverka na raztyanutosty
-                            if (Math.Abs(leftShoulder - RightShoulder) < 0.05 * Head && (leftArmpit > max(low1,low2) && RightArmpit > max(low1, low2)))
+                            if (Math.Abs(leftShoulder - RightShoulder) < 0.05 * Head && (leftArmpit > max (low1,low2) && RightArmpit > max (low1, low2)))
                             {
                                 
                                 if (chart1.Series.IsUniqueName("Голова и плечи") == false)
@@ -328,6 +422,8 @@ namespace PSA
                                 series.Points.AddXY(maxAndMins[a - 6].Date, low1);
                                 chart1.Series.Add(series);
                                 counter = 0;
+
+                                
                             }
                         }
 
@@ -410,9 +506,11 @@ namespace PSA
             List<Data> Data;
             Data = DataBank.DataList;
             DrawChart(Data);
-            RollingWindowAlghoritm(Data, 4);
+            RollingWindowAlghoritm(Data, 2);
             HeadAndShoulders(Data, IndexofLocalMaximums, true);
             HeadAndShoulders(Data, IndexofLocalMaximums, false);
+            DoubleTopAndBottom(Data, IndexofLocalMaximums, true);
+            DoubleTopAndBottom(Data, IndexofLocalMaximums, false);
             //RollingWindowAlghoritm(Data, 2);
             //IsTriangle(Data);
             //IsFlagOrPennant(Data);
