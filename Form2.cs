@@ -227,9 +227,9 @@ namespace PSA
 
             
         }
-        private void DoubleTopAndBottom((List<Data> dataList, List<MaxANdMins> maxAndMins, bool inverted){
+        //private void DoubleTopAndBottom((List<Data> dataList, List<MaxANdMins> maxAndMins, bool inverted){
 
-        }
+        //}
         private void HeadAndShoulders(List<Data> dataList, List<MaxANdMins> maxAndMins, bool inverted)
         {
             
