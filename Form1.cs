@@ -121,7 +121,7 @@ namespace PSA
 
             DrawChart(Data);
             chart1.ChartAreas[0].AxisX.Title = "Дата";
-            chart1.ChartAreas[0].AxisY.Title = "Стомость";
+            chart1.ChartAreas[0].AxisY.Title = "Стоимость";
             chart1.ChartAreas[0].AxisX.TitleFont = new System.Drawing.Font("Arial", 10, FontStyle.Bold);
             chart1.ChartAreas[0].AxisY.TitleFont = new System.Drawing.Font("Arial", 10, FontStyle.Bold);
 
