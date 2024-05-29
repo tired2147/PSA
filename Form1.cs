@@ -31,17 +31,13 @@ namespace PSA
         }
 
         List<Data> Data = new List<Data>();
-        double median, leftBound, rightBound, srznach, proc, soprotivlenie, podderjka;
+        double median, variance, leftBound, rightBound, srznach, proc, soprotivlenie, podderjka;
 
 
 
 
         private void downloadData_Click(object sender, EventArgs e)
         {
-            checkBox1.CheckState = CheckState.Unchecked;
-            checkBox2.CheckState = CheckState.Unchecked;
-            checkBox3.CheckState = CheckState.Unchecked;
-            checkBox4.CheckState = CheckState.Unchecked;
             
             if (Data.Count > 0)
             {
@@ -114,17 +110,33 @@ namespace PSA
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message);//обработка любых исключений
+                    MessageBox.Show(ex.Message, "Ошибка");//обработка любых исключений
                 }
             }
-            
-            DrawChart(Data);
-            Razchet();
             if (countErrors > 0 || countEmptyCells > 0)
             {
                 Console.WriteLine($"Обнаружено:\n *{countEmptyCells} строк, где есть пустые ячейки\n *{countErrors} ошибок, которые не удалось исправить");
-                MessageBox.Show($"Обнаружено:\n *{countEmptyCells} строк, где есть пустые ячейки\n *{countErrors} ошибок, которые не удалось исправить");
+                MessageBox.Show($"Обнаружено:\n *{countEmptyCells} строк, где есть пустые ячейки\n *{countErrors} ошибок, которые не удалось исправить", "Ошибки в файле",  MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
+
+            DrawChart(Data);
+            chart1.ChartAreas[0].AxisX.Title = "Дата";
+            chart1.ChartAreas[0].AxisY.Title = "Стомость";
+            chart1.ChartAreas[0].AxisX.TitleFont = new System.Drawing.Font("Arial", 10, FontStyle.Bold);
+            chart1.ChartAreas[0].AxisY.TitleFont = new System.Drawing.Font("Arial", 10, FontStyle.Bold);
+
+            checkBox1.CheckState = CheckState.Unchecked;
+            checkBox2.CheckState = CheckState.Unchecked;
+            checkBox3.CheckState = CheckState.Unchecked;
+            checkBox4.CheckState = CheckState.Unchecked;
+            panel8.Visible = true;
+            panel10.Visible = true;
+            panel11.Visible = true;
+            сохранитьКакToolStripMenuItem.Visible = true;
+
+            Razchet();
+
+            
 
             foreach (var i in Data)
             {
@@ -173,7 +185,7 @@ namespace PSA
                 }
                 
             }
-            median = CalculateMedian(Data);
+            
 
             //дисперсия
             double CalculateVariance(List<Data> dataList)
@@ -226,10 +238,12 @@ namespace PSA
                     return ((posledneeChislo - pervoeChislo)/posledneeChislo ) * (100) ;
                 }
             }
-            leftBound = CalculateLeftBound(Data);
-            rightBound = CalculateRightBound(Data);
-            srznach = CalculateMean(Data);
-            proc = Pocents(Data);
+            variance = Math.Round(CalculateVariance(Data), 2);
+            median = Math.Round(CalculateMedian(Data),2);
+            leftBound = Math.Round(CalculateLeftBound(Data),2);
+            rightBound = Math.Round(CalculateRightBound(Data),2);
+            srznach = Math.Round(CalculateMean(Data),2);
+            proc = Math.Round(Pocents(Data),2);
 
             ////относительная частота
             //Dictionary<double, double> CalculateRelativeFrequency(List<Data> dataList)
@@ -269,6 +283,9 @@ namespace PSA
             }
             double FindResistanceLevel(List<Data> dataList)
             {
+                if (dataList.Count == 0)
+                    return 0;
+
                 if (dataList == null || dataList.Count < 3)
                     throw new ArgumentException("Data list must contain at least 3 data points to find local maxima");
 
@@ -296,12 +313,12 @@ namespace PSA
             label5.Text = Math.Round(CalculateRightBound(Data), 2).ToString();
             if (proc > 0)
             {
-                label6.Text = "⬆" + Math.Round(proc, 2)+ "%";
+                label6.Text = "⬆" + proc + "%";
                 label6.ForeColor = System.Drawing.Color.Green;
             }
             else
             {
-                label6.Text = "⬇" + Math.Round(-proc, 2) + "%";
+                label6.Text = "⬇" + -proc + "%";
                 label6.ForeColor = System.Drawing.Color.Red;
                 
             }
@@ -435,9 +452,12 @@ namespace PSA
 
         
 
-        
+        private void PreparationOfReport()
+        {
+            
+        }
 
-        private void ExportToDocx(string text, Chart chart, string docxPath)
+        private void ExportToDocx(Chart chart, string docxPath)
         {
             try
             {
@@ -447,11 +467,22 @@ namespace PSA
 
                 // Создаем новый документ
                 var document = wordApp.Documents.Add();
+                document.Content.Font.Name = "Times New Roman";
+                document.Content.Font.Size = 14;
+                
 
                 // Добавляем текст в документ
                 Word.Paragraph para = document.Paragraphs.Add();
-                para.Range.Text = text;
+                para.Range.Text = "Отчет создан приложением \"Анализатор акций\"";
+                para.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                para.Range.Font.Bold = 1;
                 para.Range.InsertParagraphAfter();
+
+                Word.Paragraph para2 = document.Paragraphs.Add();
+                para2.Range.Text = "Ниже представлен график изменения стоимости акций:";
+                para2.Alignment = Word.WdParagraphAlignment.wdAlignParagraphLeft;
+                para2.Range.Font.Bold = 0;
+                para2.Range.InsertParagraphAfter();
 
                 // Сохраняем график в MemoryStream
                 using (MemoryStream chartStream = new MemoryStream())
@@ -467,7 +498,7 @@ namespace PSA
                     // Вставляем изображение графика в документ
                     Word.Paragraph imagePara = document.Paragraphs.Add();
                     imagePara.Range.InlineShapes.AddPicture(tempImagePath);
-                    imagePara.Range.InsertParagraphAfter();
+                    //imagePara.Range.InsertParagraphAfter();
 
                     // Удаляем временный файл
                     if (File.Exists(tempImagePath))
@@ -476,6 +507,20 @@ namespace PSA
                     }
                 }
 
+                Word.Paragraph para3 = document.Paragraphs.Add();
+                para3.Range.Text = $"Среднее значение и медиана составляют {srznach} и {median} соответственно. Если относительная разница этих величин больше определенного " +
+                    $"порога (например, 10% или 20%), это может быть индикатором асимметрии или наличия выбросов.";
+                para3.Range.Text += $"Нижний и верхний пределы - {leftBound} и {rightBound}. Показывают наименьшую и наибольшую цену";
+                para3.Range.Text += $"Показатель дисперсии - {variance}. Дисперсия в данных о стоимости акций показывает степень разброса или вариативности " +
+                    $"этих цен относительно среднего значения.";
+                if(proc > 0)
+                {
+                    para3.Range.Text += $"Изменение стоимости акции относительно первоначальной цены - {proc}%";
+                }
+                else para3.Range.Text += $"Изменение стоимости акции относительно первоначальной цены - {-proc}%";
+
+                para3.Range.InsertParagraphAfter();
+
                 // Сохраняем документ
                 document.SaveAs2(docxPath);
 
@@ -483,43 +528,77 @@ namespace PSA
                 document.Close();
                 wordApp.Quit();
 
-                MessageBox.Show("Документ успешно создан!");
+                MessageBox.Show("DOCX документ успешно создан!", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message, "Ошибка");
             }
         }
 
-        private void ExportToPdf(string text, Chart chart, string pdfPath)
+        private void ExportToPdf(Chart chart, string pdfPath)
         {
             try
             {
-                using (MemoryStream chartStream = new MemoryStream())
+                // Создаем новый документ PDF
+                using (FileStream fs = new FileStream(pdfPath, FileMode.Create, FileAccess.Write, FileShare.None))
                 {
-                    chart1.SaveImage(chartStream, ChartImageFormat.Png);
-                    chartStream.Seek(0, SeekOrigin.Begin);
+                    Document pdfDoc = new Document(PageSize.A4);
+                    PdfWriter writer = PdfWriter.GetInstance(pdfDoc, fs);
+                    pdfDoc.Open();
 
-                    using (FileStream fs = new FileStream(pdfPath, FileMode.Create, FileAccess.Write, FileShare.None))
+                    // Устанавливаем кириллический шрифт размером 14
+                    BaseFont baseFont = BaseFont.CreateFont(@"C:\Windows\Fonts\times.ttf", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
+                    iTextSharp.text.Font font = new iTextSharp.text.Font(baseFont, 14, iTextSharp.text.Font.NORMAL);
+
+                    // Создаем параграфы с использованием кириллического шрифта размером 14
+                    Paragraph title = new Paragraph("Отчет создан приложением \"Анализатор акций\"", font);
+                    title.Alignment = Element.ALIGN_CENTER;
+                    pdfDoc.Add(title);
+                    pdfDoc.Add(new Paragraph("\n"));
+
+                    Paragraph subTitle = new Paragraph("Ниже представлен график изменения стоимости акций:", font);
+                    subTitle.Alignment = Element.ALIGN_LEFT;
+                    pdfDoc.Add(subTitle);
+                    pdfDoc.Add(new Paragraph("\n"));
+
+                    // Сохраняем график в MemoryStream и уменьшаем его размер
+                    using (MemoryStream chartStream = new MemoryStream())
                     {
-                        Document doc = new Document();
-                        PdfWriter writer = PdfWriter.GetInstance(doc, fs);
+                        chart.SaveImage(chartStream, ChartImageFormat.Png);
+                        chartStream.Seek(0, SeekOrigin.Begin);
 
-                        doc.Open();
-
-                        doc.Add(new Paragraph(text));
-
+                        // Вставляем изображение графика в документ и уменьшаем его размер
                         iTextSharp.text.Image img = iTextSharp.text.Image.GetInstance(chartStream);
-                        doc.Add(img);
-
-                        doc.Close();
+                        img.ScalePercent(80f); // Уменьшаем размер на 20%
+                        pdfDoc.Add(img);
                     }
+
+                    pdfDoc.Add(new Paragraph("\n"));
+
+                    // Добавляем остальные данные с использованием кириллического шрифта размером 14
+                    string text = $"Среднее значение и медиана составляют {srznach} и {median} соответственно. Если относительная разница этих величин больше определенного " +
+                        $"порога (например, 10% или 20%), это может быть индикатором асимметрии или наличия выбросов.\n\n" +
+                        $"Нижний и верхний пределы - {leftBound} и {rightBound}. Показывают наименьшую и наибольшую цену.\n\n" +
+                        $"Показатель дисперсии - {variance}. Дисперсия в данных о стоимости акций показывает степень разброса или вариативности " +
+                        $"этих цен относительно среднего значения.\n\n";
+
+                    if (proc > 0)
+                        text += $"Изменение стоимости акции относительно первоначальной цены - {proc}%\n";
+                    else
+                        text += $"Изменение стоимости акции относительно первоначальной цены - {-proc}%\n";
+
+                    Paragraph data = new Paragraph(text, font);
+                    pdfDoc.Add(data);
+
+                    pdfDoc.Close();
                 }
-                MessageBox.Show("Документ успешно создан!");
+
+                MessageBox.Show("PDF документ успешно создан!", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message, "Ошибка");
             }
         }
 
@@ -532,7 +611,7 @@ namespace PSA
                 if (saveFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     string docxPath = saveFileDialog.FileName;
-                    ExportToDocx("ssss", chart1, docxPath);
+                    ExportToDocx(chart1, docxPath);
                 }
             }
         }
@@ -546,7 +625,7 @@ namespace PSA
                 if (saveFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     string pdfPath = saveFileDialog.FileName;
-                    ExportToPdf("sdsdasda", chart1, pdfPath);
+                    ExportToPdf(chart1, pdfPath);
                 }
             }
         }
@@ -577,7 +656,12 @@ namespace PSA
 
         private void справкаToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Авторы:\nИванов О.Н. \nБарановский Д.Ю. \nСитникова Е.Д. ");
+            MessageBox.Show("Данное приложение разработано для оценки стоимости акций компании с помощью первичного статистического анализа. " +
+                "Программа позволяет отслеживать такие величины: среднее значение, медиана, дисперсия, левый и правый пределы, а также" +
+                " выполняет поиск паттернов на графике для наглядного оценивания движения графика.\n" +
+                "Имеется возможность выгрузить отчет в формат DOCX и PDF.\n\n" +
+                "Для корректного считывания с csv-файла данные необходимо выстроить в 2 столбца (1-й - Стоимости акций, 2-й - Дата)\n\n" +
+                "Авторы:\nИванов О.Н. \nБарановский Д.Ю. \nСитникова Е.Д. ", "О программе");
         }
 
         private void загрузитьToolStripMenuItem_Click(object sender, EventArgs e)

@@ -33,6 +33,10 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.менюToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.загрузитьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.сохранитьКакToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.какPDFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.какDOCXToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.справкаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.downloadData = new System.Windows.Forms.Button();
             this.pageSetupDialog1 = new System.Windows.Forms.PageSetupDialog();
@@ -69,10 +73,6 @@
             this.panel9 = new System.Windows.Forms.Panel();
             this.panel10 = new System.Windows.Forms.Panel();
             this.panel11 = new System.Windows.Forms.Panel();
-            this.загрузитьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.сохранитьКакToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.какPDFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.какDOCXToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
@@ -96,7 +96,7 @@
             this.справкаToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1159, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1169, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -108,6 +108,37 @@
             this.менюToolStripMenuItem.Name = "менюToolStripMenuItem";
             this.менюToolStripMenuItem.Size = new System.Drawing.Size(53, 20);
             this.менюToolStripMenuItem.Text = "Меню";
+            // 
+            // загрузитьToolStripMenuItem
+            // 
+            this.загрузитьToolStripMenuItem.Name = "загрузитьToolStripMenuItem";
+            this.загрузитьToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.загрузитьToolStripMenuItem.Text = "Загрузить данные";
+            this.загрузитьToolStripMenuItem.Click += new System.EventHandler(this.загрузитьToolStripMenuItem_Click);
+            // 
+            // сохранитьКакToolStripMenuItem
+            // 
+            this.сохранитьКакToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.какPDFToolStripMenuItem,
+            this.какDOCXToolStripMenuItem});
+            this.сохранитьКакToolStripMenuItem.Name = "сохранитьКакToolStripMenuItem";
+            this.сохранитьКакToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.сохранитьКакToolStripMenuItem.Text = "Сохранить как";
+            this.сохранитьКакToolStripMenuItem.Visible = false;
+            // 
+            // какPDFToolStripMenuItem
+            // 
+            this.какPDFToolStripMenuItem.Name = "какPDFToolStripMenuItem";
+            this.какPDFToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.какPDFToolStripMenuItem.Text = "Как PDF";
+            this.какPDFToolStripMenuItem.Click += new System.EventHandler(this.какPDFToolStripMenuItem_Click);
+            // 
+            // какDOCXToolStripMenuItem
+            // 
+            this.какDOCXToolStripMenuItem.Name = "какDOCXToolStripMenuItem";
+            this.какDOCXToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.какDOCXToolStripMenuItem.Text = "Как DOCX";
+            this.какDOCXToolStripMenuItem.Click += new System.EventHandler(this.какDOCXToolStripMenuItem_Click);
             // 
             // справкаToolStripMenuItem
             // 
@@ -244,7 +275,7 @@
             this.panel1.Controls.Add(this.checkBox2);
             this.panel1.Controls.Add(this.checkBox3);
             this.panel1.Controls.Add(this.checkBox4);
-            this.panel1.Location = new System.Drawing.Point(29, 37);
+            this.panel1.Location = new System.Drawing.Point(34, 37);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(649, 505);
             this.panel1.TabIndex = 2;
@@ -253,6 +284,7 @@
             // 
             this.chart1.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.chart1.BackColor = System.Drawing.Color.Azure;
+            chartArea1.BorderWidth = 0;
             chartArea1.Name = "ChartArea1";
             this.chart1.ChartAreas.Add(chartArea1);
             legend1.Alignment = System.Drawing.StringAlignment.Center;
@@ -270,18 +302,18 @@
             // checkBox1
             // 
             this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(479, 481);
+            this.checkBox1.Location = new System.Drawing.Point(512, 477);
             this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(70, 17);
+            this.checkBox1.Size = new System.Drawing.Size(71, 17);
             this.checkBox1.TabIndex = 3;
-            this.checkBox1.Text = "медиана";
+            this.checkBox1.Text = "Медиана";
             this.checkBox1.UseVisualStyleBackColor = true;
             this.checkBox1.CheckStateChanged += new System.EventHandler(this.checkBox1_CheckStateChanged);
             // 
             // checkBox2
             // 
             this.checkBox2.AutoSize = true;
-            this.checkBox2.Location = new System.Drawing.Point(66, 481);
+            this.checkBox2.Location = new System.Drawing.Point(99, 477);
             this.checkBox2.Name = "checkBox2";
             this.checkBox2.Size = new System.Drawing.Size(99, 17);
             this.checkBox2.TabIndex = 4;
@@ -292,7 +324,7 @@
             // checkBox3
             // 
             this.checkBox3.AutoSize = true;
-            this.checkBox3.Location = new System.Drawing.Point(191, 481);
+            this.checkBox3.Location = new System.Drawing.Point(224, 477);
             this.checkBox3.Name = "checkBox3";
             this.checkBox3.Size = new System.Drawing.Size(105, 17);
             this.checkBox3.TabIndex = 5;
@@ -303,7 +335,7 @@
             // checkBox4
             // 
             this.checkBox4.AutoSize = true;
-            this.checkBox4.Location = new System.Drawing.Point(329, 481);
+            this.checkBox4.Location = new System.Drawing.Point(362, 477);
             this.checkBox4.Name = "checkBox4";
             this.checkBox4.Size = new System.Drawing.Size(119, 17);
             this.checkBox4.TabIndex = 6;
@@ -318,7 +350,7 @@
             this.panel2.BackColor = System.Drawing.Color.LightCoral;
             this.panel2.Controls.Add(this.label7);
             this.panel2.Controls.Add(this.label2);
-            this.panel2.Location = new System.Drawing.Point(679, 69);
+            this.panel2.Location = new System.Drawing.Point(684, 69);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(226, 131);
             this.panel2.TabIndex = 9;
@@ -341,7 +373,7 @@
             this.panel3.BackColor = System.Drawing.Color.CornflowerBlue;
             this.panel3.Controls.Add(this.label8);
             this.panel3.Controls.Add(this.label3);
-            this.panel3.Location = new System.Drawing.Point(679, 343);
+            this.panel3.Location = new System.Drawing.Point(684, 343);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(226, 131);
             this.panel3.TabIndex = 10;
@@ -364,7 +396,7 @@
             this.panel4.BackColor = System.Drawing.Color.SandyBrown;
             this.panel4.Controls.Add(this.label9);
             this.panel4.Controls.Add(this.label4);
-            this.panel4.Location = new System.Drawing.Point(679, 206);
+            this.panel4.Location = new System.Drawing.Point(684, 206);
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(226, 131);
             this.panel4.TabIndex = 10;
@@ -387,7 +419,7 @@
             this.panel5.BackColor = System.Drawing.Color.MediumTurquoise;
             this.panel5.Controls.Add(this.label10);
             this.panel5.Controls.Add(this.label5);
-            this.panel5.Location = new System.Drawing.Point(912, 206);
+            this.panel5.Location = new System.Drawing.Point(917, 206);
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(226, 131);
             this.panel5.TabIndex = 11;
@@ -410,7 +442,7 @@
             this.panel6.BackColor = System.Drawing.Color.YellowGreen;
             this.panel6.Controls.Add(this.label11);
             this.panel6.Controls.Add(this.label1);
-            this.panel6.Location = new System.Drawing.Point(911, 69);
+            this.panel6.Location = new System.Drawing.Point(916, 69);
             this.panel6.Name = "panel6";
             this.panel6.Size = new System.Drawing.Size(226, 131);
             this.panel6.TabIndex = 11;
@@ -432,7 +464,7 @@
             this.panel7.BackColor = System.Drawing.Color.Plum;
             this.panel7.Controls.Add(this.label12);
             this.panel7.Controls.Add(this.label6);
-            this.panel7.Location = new System.Drawing.Point(912, 343);
+            this.panel7.Location = new System.Drawing.Point(917, 343);
             this.panel7.Name = "panel7";
             this.panel7.Size = new System.Drawing.Size(226, 131);
             this.panel7.TabIndex = 11;
@@ -453,15 +485,16 @@
             this.panel8.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.panel8.AutoSize = true;
             this.panel8.Controls.Add(this.Form2LabelClick);
-            this.panel8.Location = new System.Drawing.Point(765, 500);
+            this.panel8.Location = new System.Drawing.Point(770, 500);
             this.panel8.Name = "panel8";
             this.panel8.Size = new System.Drawing.Size(306, 42);
             this.panel8.TabIndex = 12;
+            this.panel8.Visible = false;
             // 
             // panel9
             // 
             this.panel9.Controls.Add(this.downloadData);
-            this.panel9.Location = new System.Drawing.Point(230, 601);
+            this.panel9.Location = new System.Drawing.Point(245, 601);
             this.panel9.Name = "panel9";
             this.panel9.Size = new System.Drawing.Size(203, 66);
             this.panel9.TabIndex = 13;
@@ -469,55 +502,27 @@
             // panel10
             // 
             this.panel10.Controls.Add(this.buttonExportDocx);
-            this.panel10.Location = new System.Drawing.Point(667, 601);
+            this.panel10.Location = new System.Drawing.Point(703, 601);
             this.panel10.Name = "panel10";
             this.panel10.Size = new System.Drawing.Size(207, 66);
             this.panel10.TabIndex = 14;
+            this.panel10.Visible = false;
             // 
             // panel11
             // 
             this.panel11.Controls.Add(this.buttonExportPdf);
-            this.panel11.Location = new System.Drawing.Point(880, 601);
+            this.panel11.Location = new System.Drawing.Point(916, 601);
             this.panel11.Name = "panel11";
             this.panel11.Size = new System.Drawing.Size(207, 66);
             this.panel11.TabIndex = 15;
-            // 
-            // загрузитьToolStripMenuItem
-            // 
-            this.загрузитьToolStripMenuItem.Name = "загрузитьToolStripMenuItem";
-            this.загрузитьToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.загрузитьToolStripMenuItem.Text = "Загрузить";
-            this.загрузитьToolStripMenuItem.Click += new System.EventHandler(this.загрузитьToolStripMenuItem_Click);
-            // 
-            // сохранитьКакToolStripMenuItem
-            // 
-            this.сохранитьКакToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.какPDFToolStripMenuItem,
-            this.какDOCXToolStripMenuItem});
-            this.сохранитьКакToolStripMenuItem.Name = "сохранитьКакToolStripMenuItem";
-            this.сохранитьКакToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.сохранитьКакToolStripMenuItem.Text = "Сохранить как";
-            // 
-            // какPDFToolStripMenuItem
-            // 
-            this.какPDFToolStripMenuItem.Name = "какPDFToolStripMenuItem";
-            this.какPDFToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.какPDFToolStripMenuItem.Text = "Как PDF";
-            this.какPDFToolStripMenuItem.Click += new System.EventHandler(this.какPDFToolStripMenuItem_Click);
-            // 
-            // какDOCXToolStripMenuItem
-            // 
-            this.какDOCXToolStripMenuItem.Name = "какDOCXToolStripMenuItem";
-            this.какDOCXToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.какDOCXToolStripMenuItem.Text = "Как DOCX";
-            this.какDOCXToolStripMenuItem.Click += new System.EventHandler(this.какDOCXToolStripMenuItem_Click);
+            this.panel11.Visible = false;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Azure;
-            this.ClientSize = new System.Drawing.Size(1159, 728);
+            this.ClientSize = new System.Drawing.Size(1169, 728);
             this.Controls.Add(this.panel11);
             this.Controls.Add(this.panel10);
             this.Controls.Add(this.panel9);
