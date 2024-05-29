@@ -171,36 +171,94 @@ namespace PSA
             
         }
 
-        private void IsFlagOrPennant(List<Data> DataList)
-        {
-            // Логика для распознавания паттернов "Флаги и вымпелы"
-            bool flagOrPennant = false;
+        //private void IsFlagOrPennant(List<Data> DataList)
+        //{
+        //    // Логика для распознавания паттернов "Флаги и вымпелы"
+        //    bool flagOrPennant = false;
 
-            for (int i = 1; i < DataList.Count - 1; i++)
+        //    for (int i = 1; i < DataList.Count - 1; i++)
+        //    {
+        //        if (DataList[i].Value > DataList[i - 1].Value * 1.1)
+        //        {
+        //            // Найден резкий рост
+        //            for (int j = i + 1; j < DataList.Count - 1; j++)
+        //            {
+        //                if (Math.Abs(DataList[j].Value - DataList[i].Value) < 0.05 * DataList[i].Value)
+        //                {
+        //                    // Найдена консолидация
+        //                    flagOrPennant = true;
+        //                }
+        //                else if (flagOrPennant)
+        //                {
+        //                    // Консолидация завершена
+
+        //                }
+        //            }
+        //        }
+        //    }
+
+
+        //}
+        private void flagOrPennant(List<Data> dataList, List<MaxANdMins> maxAndMins)
+        {
+            int counter = 0;
+            for (int a = 0; a < maxAndMins.Count - 1; a++)
             {
-                if (DataList[i].Value > DataList[i - 1].Value * 1.1)
+                if ((maxAndMins[a].max == true && maxAndMins[a + 1].max == true) || (maxAndMins[a].max == false && maxAndMins[a + 1].max == false))
                 {
-                    // Найден резкий рост
-                    for (int j = i + 1; j < DataList.Count - 1; j++)
+                    counter = 0;
+                }
+                else
+                {
+                    counter++;
+                }
+                if (counter >= 8)
+                {
+                    var entery = maxAndMins[a - 7];
+                    var turn1 = maxAndMins[a - 6];
+                    var turn2 = maxAndMins[a - 5];
+                    var turn3 = maxAndMins[a - 4];
+                    var turn4 = maxAndMins[a - 3];
+                    var turn5 = maxAndMins[a - 2];
+                    var turn6 = maxAndMins[a - 1];
+                    var exit = maxAndMins[a - 0];
+                    if(entery.Znach < exit.Znach && entery.Znach<turn1.Znach && exit.Znach>turn6.Znach && (((exit.Znach - entery.Znach) / exit.Znach) * 100 >= 10))
                     {
-                        if (Math.Abs(DataList[j].Value - DataList[i].Value) < 0.05 * DataList[i].Value)
+                        Console.WriteLine(((exit.Znach - entery.Znach) / exit.Znach) * 100 + "--");
+                        counter --;
+                        var MaxOfMax = max(max(turn1.Znach, turn3.Znach), turn5.Znach);
+                        var MinOfMax = min(min(turn1.Znach, turn3.Znach), turn5.Znach);
+                        var MaxOfMins = max(max(turn2.Znach, turn4.Znach), turn6.Znach);
+                        var MinOfMins = min(min(turn2.Znach, turn4.Znach), turn6.Znach);
+                        //flag
+                        if (((MaxOfMax-MinOfMax)/MaxOfMax)*100 <= 5 && (((MaxOfMins - MinOfMins) / MaxOfMins) * 100 <= 5))
                         {
-                            // Найдена консолидация
-                            flagOrPennant = true;
+                            counter = 0;
+                            if (chart1.Series.IsUniqueName("флаг") == false)
+                            {
+                                chart1.Series.RemoveAt(chart1.Series.IndexOf("флаг"));
+                            }
+                            Series series = new Series("флаг");
+                            series.ChartType = SeriesChartType.Line;
+                            series.Points.AddXY(turn1.Date, turn1.Znach);
+                            //series.Points.AddXY(turn3.Date, turn3.Znach);
+                            series.Points.AddXY(turn5.Date, turn5.Znach);
+                            series.Points.AddXY(turn6.Date, turn6.Znach);
+                            //series.Points.AddXY(turn4.Date, turn4.Znach);
+                            series.Points.AddXY(turn2.Date, turn2.Znach);
+                            chart1.Series.Add(series);
+
                         }
-                        else if (flagOrPennant)
+                        //wimpel
+                        if(turn1.Znach>turn3.Znach && turn2.Znach<turn4.Znach && turn3.Znach>turn5.Znach && turn4.Znach < turn6.Znach)
                         {
-                            // Консолидация завершена
-                            
+                            counter = 0;
                         }
                     }
                 }
             }
-
-            
         }
-
-        private void IsTriangle(List<Data> DataList)
+                private void IsTriangle(List<Data> DataList)
         {
             // Логика для распознавания паттерна "Треугольники"
             int start = 0;
@@ -234,6 +292,7 @@ namespace PSA
                 if ((maxAndMins[a].max == true && maxAndMins[a + 1].max == true) || (maxAndMins[a].max == false && maxAndMins[a + 1].max == false))
                 {
                     counter = 0;
+                   
                 }
                 else
                 {
@@ -506,11 +565,12 @@ namespace PSA
             List<Data> Data;
             Data = DataBank.DataList;
             DrawChart(Data);
-            RollingWindowAlghoritm(Data, 2);
-            HeadAndShoulders(Data, IndexofLocalMaximums, true);
-            HeadAndShoulders(Data, IndexofLocalMaximums, false);
-            DoubleTopAndBottom(Data, IndexofLocalMaximums, true);
-            DoubleTopAndBottom(Data, IndexofLocalMaximums, false);
+            RollingWindowAlghoritm(Data, 3);
+            //HeadAndShoulders(Data, IndexofLocalMaximums, true);
+            //HeadAndShoulders(Data, IndexofLocalMaximums, false);
+            //DoubleTopAndBottom(Data, IndexofLocalMaximums, true);
+            //DoubleTopAndBottom(Data, IndexofLocalMaximums, false);
+            flagOrPennant(Data, IndexofLocalMaximums);
             //RollingWindowAlghoritm(Data, 2);
             //IsTriangle(Data);
             //IsFlagOrPennant(Data);
