@@ -16,8 +16,9 @@ namespace PSA
         public Form2()
         {
             InitializeComponent();
+           
         }
-       
+        int Glubina = 1;
         private void chart1_Click(object sender, EventArgs e)
         {
 
@@ -41,136 +42,6 @@ namespace PSA
             chart1.Series.Add(series);
 
         }
-        
-        
-        //private void HeadAndShoulders(List<Data> DataList)
-        //{
-            
-        //    for (int i = 1; i < DataList.Count - 1; i++)
-        //    {
-        //        if (DataList[i].Value > DataList[i - 1].Value && DataList[i].Value > DataList[i + 1].Value)
-        //        {
-        //            // Найден пик
-        //            double leftShoulder = DataList[i - 1].Value;
-        //            var leftShoulderDate = DataList[i - 1].Date;
-        //            double head = DataList[i].Value;
-        //            var HeadDate = DataList[i].Date;
-        //            double rightShoulder = DataList[i + 1].Value;
-        //            var RightShoulderDate = DataList[i + 1].Date;
-
-        //            if (leftShoulder < head && rightShoulder < head && Math.Abs(leftShoulder - rightShoulder) < 0.05 * head)
-        //            {
-        //                // Найден паттерн "Голова и плечи"
-        //                if (chart1.Series.IsUniqueName("Голова и плечи") == false)
-        //                {
-        //                    chart1.Series.RemoveAt(chart1.Series.IndexOf("Голова и плечи"));
-        //                }
-        //                Series series = new Series("Голова и плечи");
-        //                series.ChartType = SeriesChartType.Line;
-        //                series.Points.AddXY(leftShoulderDate, leftShoulder+10);
-        //                series.Points.AddXY(HeadDate, head+10);
-        //                series.Points.AddXY(RightShoulderDate, rightShoulder+10);
-        //                chart1.Series.Add(series);
-        //            }
-        //        }
-        //    }
-
-        //}
-        //private void IsDoubleTop(List<Data> DataList)
-        //{
-        //    // Логика для распознавания паттерна "Двойная вершина"
-        //    for (int i = 1; i < DataList.Count - 2; i++)
-        //    {
-        //        if (DataList[i].Value > DataList[i - 1].Value && DataList[i].Value > DataList[i + 1].Value)
-        //        {
-        //            // Найден первый пик
-        //            double firstTop = DataList[i].Value;
-        //            var firstTopDate = DataList[i].Date;
-
-        //            for (int j = i + 2; j < DataList.Count - 1; j++)
-        //            {
-        //                if (DataList[j].Value > DataList[j - 1].Value && DataList[j].Value > DataList[j + 1].Value)
-        //                {
-        //                    // Найден второй пик
-        //                    double secondTop = DataList[j].Value;
-        //                    var SecondTopDate = DataList[j].Date;
-
-        //                    if (Math.Abs(firstTop - secondTop) < 0.05 * firstTop)
-        //                    {
-        //                        if (chart1.Series.IsUniqueName("Двойная вершина") == false)
-        //                        {
-        //                            chart1.Series.RemoveAt(chart1.Series.IndexOf("Двойная вершина"));
-        //                        }
-        //                        Series series = new Series("Двойная вершина");
-        //                        series.ChartType = SeriesChartType.Line;
-        //                        series.Points.AddXY(firstTopDate, firstTop);
-        //                        series.Points.AddXY(SecondTopDate, secondTop);
-        //                        chart1.Series.Add(series);
-        //                        break;
-        //                    }
-        //                }
-        //            }
-        //        }
-        //    }
-
-            
-        //}
-
-        private void IsDoubleBottom(List<Data> DataList)
-        {
-            // Логика для распознавания паттерна "Двойное дно"
-            for (int i = 1; i < DataList.Count - 2; i++)
-            {
-                if (DataList[i].Value < DataList[i - 1].Value && DataList[i].Value < DataList[i + 1].Value)
-                {
-                    // Найден первый минимум
-                    double firstBottoma = DataList[i-1].Value;
-                    var aa = DataList[i-1].Date;
-                    double firstBottom = DataList[i].Value;
-                    var a = DataList[i].Date;
-                    double firstBottomb = DataList[i+1].Value;
-                    var ab = DataList[i+1].Date;
-                    for (int j = i + 2; j < DataList.Count - 1; j++)
-                    {
-                        if (DataList[j].Value < DataList[j - 1].Value && DataList[j].Value < DataList[j + 1].Value)
-                        {
-                            // Найден второй минимум
-                            double secondBottoma = DataList[j-1].Value;
-                            var ba = DataList[j-1].Date; 
-                            double secondBottom = DataList[j].Value;
-                            var b = DataList[j].Date;
-                            double secondBottomb = DataList[j+1].Value;
-                            var bb = DataList[j+1].Date;
-
-                            if (Math.Abs(firstBottom - secondBottom) < 0.05 * firstBottom)
-                            {
-                                // Найден паттерн "Двойное дно"
-                                if(chart1.Series.IsUniqueName("Двойное дно")==false)
-                                {
-                                    chart1.Series.RemoveAt(chart1.Series.IndexOf("Двойное дно"));
-                                }
-                                Series series = new Series("Двойное дно");
-                                series.ChartType = SeriesChartType.Line;
-                                series.Points.AddXY(aa, firstBottoma-10);
-                                series.Points.AddXY(a, firstBottom-10);
-                                series.Points.AddXY(ab, firstBottomb -10);
-                                series.Points.AddXY(ba, secondBottoma - 10);
-                                series.Points.AddXY(b, secondBottom- 10);
-                                series.Points.AddXY(bb, secondBottomb -10);
-                                series.Points.AddXY(bb, secondBottomb + 10);
-                               series.Points.AddXY(aa, firstBottoma + 10);
-                                series.Points.AddXY(aa, firstBottoma - 10);
-                                chart1.Series.Add(series);
-
-                            }
-                        }
-                    }
-                }
-            }
-
-            
-        }
-
         //private void IsFlagOrPennant(List<Data> DataList)
         //{
         //    // Логика для распознавания паттернов "Флаги и вымпелы"
@@ -628,6 +499,7 @@ namespace PSA
         }
         private void RollingWindowAlghoritm(List<Data> DataList, int order)
         {
+            IndexofLocalMaximums.Clear();
             
                 for (int i = order; i < DataList.Count - order; i++)
                 {
@@ -676,19 +548,59 @@ namespace PSA
             List<Data> Data;
             Data = DataBank.DataList;
             DrawChart(Data);
-            RollingWindowAlghoritm(Data, 2);
+            checkBox1.CheckState = CheckState.Unchecked;
+            RollingWindowAlghoritm(Data, Glubina);
             //HeadAndShoulders(Data, IndexofLocalMaximums, true);
             //HeadAndShoulders(Data, IndexofLocalMaximums, false);
             //DoubleTopAndBottom(Data, IndexofLocalMaximums, true);
             //DoubleTopAndBottom(Data, IndexofLocalMaximums, false);
-            flagOrPennant(Data, IndexofLocalMaximums);
-            ReverseflagOrPennant(Data, IndexofLocalMaximums);
+            //flagOrPennant(Data, IndexofLocalMaximums);
+            //ReverseflagOrPennant(Data, IndexofLocalMaximums);
             //RollingWindowAlghoritm(Data, 2);
             //IsTriangle(Data);
             //IsFlagOrPennant(Data);
             //IsDoubleBottom(Data);
             //IsDoubleTop(Data);
             //HeadAndShoulders(Data);
+        }
+        private void algo(List<Data> Data)
+        {
+            Glubina = int.Parse(textBox1.Text);
+            RollingWindowAlghoritm(Data, Glubina);
+        }
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox1.Checked == true)
+            {
+                //передаем что нарисовать и название
+                    
+                List<Data> Data;
+                Data = DataBank.DataList;
+                
+                HeadAndShoulders(Data, IndexofLocalMaximums, false);
+                if (chart1.Series.IsUniqueName("Голова и плечи") == true)
+                {
+                    MessageBox.Show("Не найден");
+                    checkBox1.CheckState = CheckState.Unchecked;
+                }
+            }
+            else //передаем название для удаления
+               {
+                if (chart1.Series.IsUniqueName("Голова и плечи") == true)
+                {
+                }
+                else
+                {
+                    chart1.Series.RemoveAt(chart1.Series.IndexOf("Голова и плечи"));
+                }
+                 }
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            List<Data> Data;
+            Data = DataBank.DataList;
+            algo(Data);
         }
     }
 }
