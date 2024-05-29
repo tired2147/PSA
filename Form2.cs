@@ -231,36 +231,9 @@ namespace PSA
                 return (a - b) / a * 100;
             }
             else
-            {
+            { 
                 return(b-a) / b * 100;
             }
-        }
-                private void IsTriangle(List<Data> DataList)
-        {
-            // Логика для распознавания паттерна "Треугольники"
-            int start = 0;
-            while (start < DataList.Count - 2)
-            {
-                int end = start + 1;
-                while (end < DataList.Count - 1 && DataList[end].Value != DataList[start].Value)
-                {
-                    end++;
-                }
-
-                if (end < DataList.Count - 1)
-                {
-                    // Найден треугольник
-                    Series series = new Series("Треугольник");
-                    series.ChartType = SeriesChartType.Line;
-                    series.Points.AddXY(DataList.ElementAt(0).Date, DataList.ElementAt(0).Value);
-                    series.Points.AddXY(DataList.Last().Date, DataList.Last().Value);
-                    chart1.Series.Add(series);
-                }
-
-                start++;
-            }
-
-            
         }
         private void DoubleTopAndBottom(List<Data> dataList, List<MaxANdMins> maxAndMins, bool inverted){
             int counter = 0;
@@ -304,7 +277,6 @@ namespace PSA
                                 Series series = new Series("Перевернутая двойная вершина");
                                 Series series1 = new Series("шея");
                                 series.BorderWidth = 2;
-                                series.Color = Color.Purple;
                                 series.ChartType = SeriesChartType.Line;
                                 series1.ChartType = SeriesChartType.Line;
                                 series.Points.AddXY(min1.Date, min1.Znach);
@@ -549,6 +521,10 @@ namespace PSA
             Data = DataBank.DataList;
             DrawChart(Data);
             checkBox1.CheckState = CheckState.Unchecked;
+            checkBox2.CheckState = CheckState.Unchecked;
+            checkBox3.CheckState = CheckState.Unchecked;
+            checkBox4.CheckState = CheckState.Unchecked;
+            checkBox5.CheckState = CheckState.Unchecked;
             RollingWindowAlghoritm(Data, Glubina);
             //HeadAndShoulders(Data, IndexofLocalMaximums, true);
             //HeadAndShoulders(Data, IndexofLocalMaximums, false);
@@ -565,22 +541,26 @@ namespace PSA
         }
         private void algo(List<Data> Data)
         {
-            Glubina = int.Parse(textBox1.Text);
+            Glubina = Int32.Parse(numericUpDown1.Value.ToString());
             RollingWindowAlghoritm(Data, Glubina);
         }
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
             if (checkBox1.Checked == true)
             {
-                //передаем что нарисовать и название
-                    
+                
+                checkBox2.CheckState = CheckState.Unchecked;
+                checkBox3.CheckState = CheckState.Unchecked;
+                checkBox4.CheckState = CheckState.Unchecked;
+                checkBox5.CheckState = CheckState.Unchecked;
+                richTextBox1.Text = "Паттерн \"Голова и плечи\" сигнализирует о развороте восходящего тренда в нисходящий.";
                 List<Data> Data;
                 Data = DataBank.DataList;
                 
                 HeadAndShoulders(Data, IndexofLocalMaximums, false);
                 if (chart1.Series.IsUniqueName("Голова и плечи") == true)
                 {
-                    MessageBox.Show("Не найден");
+                    MessageBox.Show("Паттерн не найден");
                     checkBox1.CheckState = CheckState.Unchecked;
                 }
             }
@@ -596,11 +576,190 @@ namespace PSA
                  }
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
+
+        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
         {
             List<Data> Data;
             Data = DataBank.DataList;
             algo(Data);
+        }
+
+      
+        private void checkBox2_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox2.Checked == true)
+            {
+                
+                checkBox1.CheckState = CheckState.Unchecked;
+
+                checkBox3.CheckState = CheckState.Unchecked;
+                checkBox4.CheckState = CheckState.Unchecked;
+                checkBox5.CheckState = CheckState.Unchecked;
+                checkBox6.CheckState = CheckState.Unchecked;
+                List<Data> Data;
+                Data = DataBank.DataList;
+                richTextBox1.Text = "Перевернутая \"Голова и плечи\" сигнализирует о развороте нисходящего тренда в восходящий.";
+                HeadAndShoulders(Data, IndexofLocalMaximums, true);
+                if (chart1.Series.IsUniqueName("Перевернутая голова и плечи") == true)
+                {
+                    MessageBox.Show("Паттерн не найден");
+                    checkBox2.CheckState = CheckState.Unchecked;
+                }
+            }
+            else //передаем название для удаления
+            {
+                if (chart1.Series.IsUniqueName("Перевернутая голова и плечи") == true)
+                {
+                }
+                else
+                {
+                    chart1.Series.RemoveAt(chart1.Series.IndexOf("Перевернутая голова и плечи"));
+                }
+            }
+        }
+
+        private void checkBox3_CheckedChanged(object sender, EventArgs e)
+        {
+           
+            if (checkBox3.Checked == true)
+            {
+                checkBox1.CheckState = CheckState.Unchecked;
+                checkBox2.CheckState = CheckState.Unchecked;
+                checkBox4.CheckState = CheckState.Unchecked;
+                checkBox5.CheckState = CheckState.Unchecked;
+                checkBox6.CheckState = CheckState.Unchecked;
+                List<Data> Data;
+                Data = DataBank.DataList;
+                richTextBox1.Text = "Двойная вершина сигнализирует о возможном развороте восходящего тренда в нисходящий.";
+                DoubleTopAndBottom(Data, IndexofLocalMaximums, false);
+                if (chart1.Series.IsUniqueName("Двойная вершина") == true)
+                {
+                    MessageBox.Show("Паттерн не найден");
+                    checkBox3.CheckState = CheckState.Unchecked;
+                }
+            }
+            else //передаем название для удаления
+            {
+                if (chart1.Series.IsUniqueName("Двойная вершина") == true)
+                {
+                }
+                else
+                {
+                    chart1.Series.RemoveAt(chart1.Series.IndexOf("Двойная вершина"));
+                }
+            }
+        }
+
+        private void checkBox4_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox4.Checked == true)
+            {
+                
+                checkBox1.CheckState = CheckState.Unchecked;
+                checkBox2.CheckState = CheckState.Unchecked;
+                checkBox3.CheckState = CheckState.Unchecked;
+                checkBox5.CheckState = CheckState.Unchecked;
+                checkBox6.CheckState = CheckState.Unchecked;
+                List<Data> Data;
+                Data = DataBank.DataList;
+                richTextBox1.Text = "Двойное дно сигнализирует о возможном развороте нисходящего тренда в восходящий.";
+                DoubleTopAndBottom(Data, IndexofLocalMaximums, true);
+                if (chart1.Series.IsUniqueName("Перевернутая двойная вершина") == true)
+                {
+                    MessageBox.Show("Паттерн не найден");
+                    checkBox4.CheckState = CheckState.Unchecked;
+                }
+            }
+            else //передаем название для удаления
+            {
+                if (chart1.Series.IsUniqueName("Перевернутая двойная вершина") == true)
+                {
+                }
+                else
+                {
+                    chart1.Series.RemoveAt(chart1.Series.IndexOf("Перевернутая двойная вершина"));
+                }
+            }
+        }
+
+        private void checkBox5_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox5.Checked == true)
+            {
+                
+                checkBox1.CheckState = CheckState.Unchecked;
+                checkBox2.CheckState = CheckState.Unchecked;
+                checkBox3.CheckState = CheckState.Unchecked;
+                checkBox4.CheckState = CheckState.Unchecked;
+                checkBox6.CheckState = CheckState.Unchecked;
+                richTextBox1.Text = "Эти паттерны считаются паттернами продолжения тренда. Они сигнализируют о краткосрочной паузе в тренде, после которой тренд, скорее всего, продолжится в том же направлении.";
+                List<Data> Data;
+                Data = DataBank.DataList;
+
+                flagOrPennant(Data, IndexofLocalMaximums);
+                if (chart1.Series.IsUniqueName("флаг") == true && chart1.Series.IsUniqueName("Вымпел") == true)
+                {
+                    MessageBox.Show("Паттерн не найден");
+                    checkBox5.CheckState = CheckState.Unchecked;
+                }
+            }
+            else //передаем название для удаления
+            {
+                if (chart1.Series.IsUniqueName("флаг") == true)
+                {
+                }
+                else
+                {
+                    chart1.Series.RemoveAt(chart1.Series.IndexOf("флаг"));
+                }
+                if (chart1.Series.IsUniqueName("Вымпел") == true)
+                {
+                }
+                else
+                {
+                    chart1.Series.RemoveAt(chart1.Series.IndexOf("Вымпел"));
+                }
+            }
+        }
+
+        private void checkBox6_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox6.Checked == true)
+            {
+                
+                checkBox1.CheckState = CheckState.Unchecked;
+                checkBox2.CheckState = CheckState.Unchecked;
+                checkBox3.CheckState = CheckState.Unchecked;
+                checkBox4.CheckState = CheckState.Unchecked;
+                checkBox5.CheckState = CheckState.Unchecked;
+                richTextBox1.Text = "Эти паттерны также считаются паттернами продолжения тренда, но они указывают на продолжение нисходящего тренда.";
+                List<Data> Data;
+                Data = DataBank.DataList;
+
+                ReverseflagOrPennant(Data, IndexofLocalMaximums);
+                if (chart1.Series.IsUniqueName("Перевернутый флаг") == true && chart1.Series.IsUniqueName("Перевернутый вымпел") == true)
+                {
+                    MessageBox.Show("Паттерн не найден");
+                    checkBox6.CheckState = CheckState.Unchecked;
+                }
+            }
+            else //передаем название для удаления
+            {
+                if (chart1.Series.IsUniqueName("Перевернутый флаг") == true)
+                {
+                }
+                else
+                {
+                    chart1.Series.RemoveAt(chart1.Series.IndexOf("Перевернутый флаг"));
+                }
+                if (chart1.Series.IsUniqueName("Перевернутый вымпел") == true)
+                {
+                }
+                else
+                {
+                    chart1.Series.RemoveAt(chart1.Series.IndexOf("Перевернутый вымпел"));
+                }
+            }
         }
     }
 }
