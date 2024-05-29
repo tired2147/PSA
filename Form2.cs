@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
@@ -7,17 +8,36 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using System.IO;
 using System.Windows.Forms.DataVisualization.Charting;
+using System.Diagnostics;
+using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Packaging;
+using Word = Microsoft.Office.Interop.Word;
+using System.Drawing.Imaging;
 
 namespace PSA
 {
     public partial class Form2 : Form
     {
-        public Form2()
+        // Ссылка на первую форму
+        private Form1 form1;
+
+        public Form2(Form1 form1)
         {
             InitializeComponent();
-           
+            chart1.ChartAreas[0].AxisX.Title = "Дата";
+            chart1.ChartAreas[0].AxisY.Title = "Стоимость";
+            chart1.ChartAreas[0].AxisX.TitleFont = new System.Drawing.Font("Arial", 10, FontStyle.Bold);
+            chart1.ChartAreas[0].AxisY.TitleFont = new System.Drawing.Font("Arial", 10, FontStyle.Bold);
+            this.form1 = form1;
         }
+
+        
+        
+
         int Glubina = 1;
         private void chart1_Click(object sender, EventArgs e)
         {
@@ -761,6 +781,82 @@ namespace PSA
                     chart1.Series.RemoveAt(chart1.Series.IndexOf("Перевернутый вымпел"));
                 }
             }
+        }
+
+        private void ExportToPdf(Chart chart, string pdfPath)
+        {
+            try
+            {
+                // Создаем новый документ PDF
+                using (FileStream fs = new FileStream(pdfPath, FileMode.Create, FileAccess.Write, FileShare.None))
+                {
+                    Document pdfDoc = new Document(PageSize.A4);
+                    PdfWriter writer = PdfWriter.GetInstance(pdfDoc, fs);
+                    pdfDoc.Open();
+
+                    // Устанавливаем кириллический шрифт размером 14
+                    BaseFont baseFont = BaseFont.CreateFont(@"C:\Windows\Fonts\times.ttf", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
+                    iTextSharp.text.Font font = new iTextSharp.text.Font(baseFont, 14, iTextSharp.text.Font.NORMAL);
+
+                    // Создаем параграфы с использованием кириллического шрифта размером 14
+                    Paragraph title = new Paragraph("Отчет создан приложением \"Анализатор акций\"", font);
+                    title.Alignment = Element.ALIGN_CENTER;
+                    pdfDoc.Add(title);
+                    pdfDoc.Add(new Paragraph("\n"));
+
+                    Paragraph subTitle = new Paragraph("Ниже представлен график с найденным на нём паттерном:", font);
+                    subTitle.Alignment = Element.ALIGN_LEFT;
+                    pdfDoc.Add(subTitle);
+                    pdfDoc.Add(new Paragraph("\n"));
+
+                    // Сохраняем график в MemoryStream и уменьшаем его размер
+                    using (MemoryStream chartStream = new MemoryStream())
+                    {
+                        chart.SaveImage(chartStream, ChartImageFormat.Png);
+                        chartStream.Seek(0, SeekOrigin.Begin);
+
+                        // Вставляем изображение графика в документ и уменьшаем его размер
+                        iTextSharp.text.Image img = iTextSharp.text.Image.GetInstance(chartStream);
+                        img.ScalePercent(80f); // Уменьшаем размер на 20%
+                        pdfDoc.Add(img);
+                    }
+
+                    pdfDoc.Add(new Paragraph("\n"));
+
+                    
+
+                    pdfDoc.Close();
+                }
+
+                MessageBox.Show("PDF документ успешно создан!", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка");
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            using (SaveFileDialog saveFileDialog = new SaveFileDialog())
+            {
+                saveFileDialog.Filter = "PDF Document|*.pdf";
+                saveFileDialog.Title = "Save as PDF Document";
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    string pdfPath = saveFileDialog.FileName;
+                    ExportToPdf(chart1, pdfPath);
+                }
+            }
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+            // Показать первую форму
+            form1.Show();
+
+            // Закрыть текущую форму
+            this.Close();
         }
     }
 }

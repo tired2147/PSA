@@ -44,6 +44,7 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.button1 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.panel1.SuspendLayout();
@@ -51,6 +52,7 @@
             // 
             // chart1
             // 
+            this.chart1.BackColor = System.Drawing.Color.Azure;
             chartArea1.Name = "ChartArea1";
             this.chart1.ChartAreas.Add(chartArea1);
             legend1.Alignment = System.Drawing.StringAlignment.Center;
@@ -71,7 +73,7 @@
             // checkBox1
             // 
             this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(723, 439);
+            this.checkBox1.Location = new System.Drawing.Point(734, 237);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(103, 17);
             this.checkBox1.TabIndex = 3;
@@ -82,7 +84,7 @@
             // checkBox2
             // 
             this.checkBox2.AutoSize = true;
-            this.checkBox2.Location = new System.Drawing.Point(848, 439);
+            this.checkBox2.Location = new System.Drawing.Point(859, 237);
             this.checkBox2.Name = "checkBox2";
             this.checkBox2.Size = new System.Drawing.Size(154, 17);
             this.checkBox2.TabIndex = 4;
@@ -93,7 +95,7 @@
             // checkBox3
             // 
             this.checkBox3.AutoSize = true;
-            this.checkBox3.Location = new System.Drawing.Point(723, 485);
+            this.checkBox3.Location = new System.Drawing.Point(734, 283);
             this.checkBox3.Name = "checkBox3";
             this.checkBox3.Size = new System.Drawing.Size(118, 17);
             this.checkBox3.TabIndex = 5;
@@ -104,7 +106,7 @@
             // checkBox4
             // 
             this.checkBox4.AutoSize = true;
-            this.checkBox4.Location = new System.Drawing.Point(848, 485);
+            this.checkBox4.Location = new System.Drawing.Point(859, 283);
             this.checkBox4.Name = "checkBox4";
             this.checkBox4.Size = new System.Drawing.Size(92, 17);
             this.checkBox4.TabIndex = 6;
@@ -115,7 +117,7 @@
             // checkBox5
             // 
             this.checkBox5.AutoSize = true;
-            this.checkBox5.Location = new System.Drawing.Point(723, 531);
+            this.checkBox5.Location = new System.Drawing.Point(734, 329);
             this.checkBox5.Name = "checkBox5";
             this.checkBox5.Size = new System.Drawing.Size(120, 17);
             this.checkBox5.TabIndex = 7;
@@ -126,7 +128,7 @@
             // checkBox6
             // 
             this.checkBox6.AutoSize = true;
-            this.checkBox6.Location = new System.Drawing.Point(848, 531);
+            this.checkBox6.Location = new System.Drawing.Point(859, 329);
             this.checkBox6.Name = "checkBox6";
             this.checkBox6.Size = new System.Drawing.Size(194, 17);
             this.checkBox6.TabIndex = 8;
@@ -159,28 +161,43 @@
             // panel1
             // 
             this.panel1.Controls.Add(this.label2);
-            this.panel1.Location = new System.Drawing.Point(769, 97);
+            this.panel1.Location = new System.Drawing.Point(755, 517);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(200, 100);
+            this.panel1.Size = new System.Drawing.Size(123, 53);
             this.panel1.TabIndex = 13;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(58, 44);
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label2.Location = new System.Drawing.Point(13, 20);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(60, 13);
+            this.label2.Size = new System.Drawing.Size(98, 20);
             this.label2.TabIndex = 0;
             this.label2.Text = "Вернуться";
+            this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
             // richTextBox1
             // 
-            this.richTextBox1.Location = new System.Drawing.Point(723, 295);
+            this.richTextBox1.Location = new System.Drawing.Point(743, 81);
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.ReadOnly = true;
-            this.richTextBox1.Size = new System.Drawing.Size(284, 138);
+            this.richTextBox1.Size = new System.Drawing.Size(270, 138);
             this.richTextBox1.TabIndex = 14;
             this.richTextBox1.Text = "";
+            // 
+            // button1
+            // 
+            this.button1.BackColor = System.Drawing.Color.Silver;
+            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.button1.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.button1.Location = new System.Drawing.Point(800, 380);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(151, 49);
+            this.button1.TabIndex = 15;
+            this.button1.Text = "Сохранить текущий паттерн";
+            this.button1.UseVisualStyleBackColor = false;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // Form2
             // 
@@ -188,6 +205,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Azure;
             this.ClientSize = new System.Drawing.Size(1069, 603);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.numericUpDown1);
@@ -226,5 +244,6 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.Button button1;
     }
 }

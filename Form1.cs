@@ -634,7 +634,7 @@ namespace PSA
 
        private void Form2LabelClick_Click(object sender, EventArgs e)
         {
-            Form2 form2 = new Form2();
+            Form2 form2 = new Form2(this);
             List<Data> NewData = new List<Data>();
             int counter = 0;
             foreach(var data in Data)
@@ -647,7 +647,16 @@ namespace PSA
                 counter++;
             }
             DataBank.DataList = NewData;
+
+            // Подписка на событие FormClosed второй формы
+            form2.FormClosed += (s, args) => this.Show();
+
+            // Отображение второй формы
             form2.Show();
+
+            // Скрытие первой формы
+            this.Hide();
+
         }
 
 
