@@ -46,6 +46,10 @@ namespace PSA
                 if (result == DialogResult.Yes)
                 {
                     Data.Clear();
+                    checkBox1.CheckState = CheckState.Unchecked;
+                    checkBox2.CheckState = CheckState.Unchecked;
+                    checkBox3.CheckState = CheckState.Unchecked;
+                    checkBox4.CheckState = CheckState.Unchecked;
                     chart1.Series.Clear();
                     label1.Text = ""; label2.Text = ""; label3.Text = ""; label4.Text = ""; label5.Text = ""; label6.Text = "";
                     OpenFile();
@@ -55,7 +59,12 @@ namespace PSA
             }
             else
             {
+                checkBox1.CheckState = CheckState.Unchecked;
+                checkBox2.CheckState = CheckState.Unchecked;
+                checkBox3.CheckState = CheckState.Unchecked;
+                checkBox4.CheckState = CheckState.Unchecked;
                 OpenFile();
+
             }
         }
         private void OpenFile()
@@ -125,16 +134,14 @@ namespace PSA
             chart1.ChartAreas[0].AxisX.TitleFont = new System.Drawing.Font("Arial", 10, FontStyle.Bold);
             chart1.ChartAreas[0].AxisY.TitleFont = new System.Drawing.Font("Arial", 10, FontStyle.Bold);
 
-            checkBox1.CheckState = CheckState.Unchecked;
-            checkBox2.CheckState = CheckState.Unchecked;
-            checkBox3.CheckState = CheckState.Unchecked;
-            checkBox4.CheckState = CheckState.Unchecked;
+            
             panel8.Visible = true;
             panel10.Visible = true;
             panel11.Visible = true;
             сохранитьКакToolStripMenuItem.Visible = true;
 
             Razchet();
+            PoiskTrendov();
 
             
 
@@ -267,40 +274,7 @@ namespace PSA
             //}
 
             // Метод для нахождения локальных максимумов
-            List<double> FindLocalMaxima(List<Data> dataList)
-            {
-                List<double> localMaxima = new List<double>();
-
-                for (int i = 1; i < dataList.Count - 1; i++)
-                {
-                    if (dataList[i].Value > dataList[i - 1].Value && dataList[i].Value > dataList[i + 1].Value)
-                    {
-                        localMaxima.Add(dataList[i].Value);
-                    }
-                }
-
-                return localMaxima;
-            }
-            double FindResistanceLevel(List<Data> dataList)
-            {
-                if (dataList.Count == 0)
-                    return 0;
-
-                if (dataList == null || dataList.Count < 3)
-                    throw new ArgumentException("Data list must contain at least 3 data points to find local maxima");
-
-                // Находим локальные максимумы
-                List<double> localMaxima = FindLocalMaxima(dataList);
-
-                if (localMaxima.Count == 0)
-                    throw new InvalidOperationException("No local maxima found in the data list");
-
-                // Рассчитываем среднее значение локальных максимумов как уровень сопротивления
-                double resistanceLevel = localMaxima.Average();
-                return resistanceLevel;
-            }
-
-            soprotivlenie = FindResistanceLevel(Data);
+            
 
 
 
@@ -334,7 +308,89 @@ namespace PSA
 
         }
 
+        private void PoiskTrendov()
+        {
+            /*List<Data> FindLocalMaxima()
+            {
+                List<Data> localMaxima = new List<Data>();
+                for (int i = 1; i < Data.Count - 1; i++)
+                {
+                    if (Data[i].Value > Data[i - 1].Value && Data[i].Value > Data[i + 1].Value)
+                    {
+                        localMaxima.Add(Data[i]);
+                    }
+                }
+                return localMaxima;
+            }
 
+            List<Data> FindLocalMinima()
+            {
+                List<Data> localMinima = new List<Data>();
+                for (int i = 1; i < Data.Count - 1; i++)
+                {
+                    if (Data[i].Value < Data[i - 1].Value && Data[i].Value < Data[i + 1].Value)
+                    {
+                        localMinima.Add(Data[i]);
+                    }
+                }
+                return localMinima;
+            }*/
+
+            void LinearRegression(double[] xValues, double[] yValues, out double a, out double b)
+            {
+                int n = xValues.Length;
+                double sumX = xValues.Sum();
+                double sumY = yValues.Sum();
+                double sumX2 = xValues.Sum(x => x * x);
+                double sumXY = xValues.Zip(yValues, (x, y) => x * y).Sum();
+
+                a = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+                b = (sumY - a * sumX) / n;
+            }
+
+
+            void PlotTrendLine()
+            {
+                if (Data.Count < 2)
+                {
+                    return;
+                }
+
+                //// Расчет количества элементов для 40%
+                //int count = (int)(Data.Count * 1);
+
+                //// Если количество элементов меньше 1, установить его в 1
+                //if (count < 1) count = 1;
+
+                //// Расчет начального индекса
+                //int startIndex = Data.Count - count;
+
+                //// Извлечение последних 20% значений
+                //List<Data> last20PercentList = Data.GetRange(startIndex, count);
+
+                double[] xValues = Data.Select(p => p.Date.ToOADate()).ToArray();
+                double[] yValues = Data.Select(p => p.Value).ToArray();
+
+                double a, b;
+                LinearRegression(xValues, yValues, out a, out b);
+
+                Series trendLine = new Series("TrendLine")
+                {
+                    ChartType = SeriesChartType.Line,
+                    Color = Color.Orange,
+                    BorderWidth = 2,
+                    //XValueType = ChartValueType.DateTime
+                };
+                chart1.Series.Add(trendLine);
+
+                double startX = xValues.First();
+                double endX = xValues.Last();
+                trendLine.Points.AddXY(DateTime.FromOADate(startX), a * startX + b);
+                trendLine.Points.AddXY(DateTime.FromOADate(endX), a * endX + b);
+            }
+
+            PlotTrendLine();
+        }
 
 
 
@@ -346,7 +402,7 @@ namespace PSA
             // Создать новую серию данных для графика
             Series series = new Series("stocks");
             series.ChartType = SeriesChartType.Line; // Выбрать тип графика (линейный)
-            series.BorderWidth = 4; //толщина линии
+            series.BorderWidth = 3; //толщина линии
             series.Color = Color.DarkRed;
             
 
