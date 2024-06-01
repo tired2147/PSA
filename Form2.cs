@@ -25,7 +25,7 @@ namespace PSA
         // Ссылка на первую форму
         private Form1 form1;
 
-        public Form2(Form1 form1)
+        public Form2(Form1 form1, int x, int y)
         {
             InitializeComponent();
             chart1.ChartAreas[0].AxisX.Title = "Дата";
@@ -33,6 +33,10 @@ namespace PSA
             chart1.ChartAreas[0].AxisX.TitleFont = new System.Drawing.Font("Arial", 10, FontStyle.Bold);
             chart1.ChartAreas[0].AxisY.TitleFont = new System.Drawing.Font("Arial", 10, FontStyle.Bold);
             this.form1 = form1;
+
+            // Установить местоположение второй формы
+            this.StartPosition = FormStartPosition.Manual;
+            this.Location = new System.Drawing.Point(x, y);
         }
 
         

@@ -46,6 +46,11 @@ namespace PSA
                 if (result == DialogResult.Yes)
                 {
                     Data.Clear();
+                    checkBox1.CheckState = CheckState.Unchecked;
+                    checkBox2.CheckState = CheckState.Unchecked;
+                    checkBox3.CheckState = CheckState.Unchecked;
+                    checkBox4.CheckState = CheckState.Unchecked;
+                    checkBox5.CheckState = CheckState.Unchecked;
                     chart1.Series.Clear();
                     label1.Text = ""; label2.Text = ""; label3.Text = ""; label4.Text = ""; label5.Text = ""; label6.Text = "";
                     OpenFile();
@@ -55,7 +60,13 @@ namespace PSA
             }
             else
             {
+                checkBox1.CheckState = CheckState.Unchecked;
+                checkBox2.CheckState = CheckState.Unchecked;
+                checkBox3.CheckState = CheckState.Unchecked;
+                checkBox4.CheckState = CheckState.Unchecked;
+                checkBox5.CheckState = CheckState.Unchecked;
                 OpenFile();
+
             }
         }
         private void OpenFile()
@@ -118,25 +129,34 @@ namespace PSA
                 Console.WriteLine($"Обнаружено:\n *{countEmptyCells} строк, где есть пустые ячейки\n *{countErrors} ошибок, которые не удалось исправить");
                 MessageBox.Show($"Обнаружено:\n *{countEmptyCells} строк, где есть пустые ячейки\n *{countErrors} ошибок, которые не удалось исправить", "Ошибки в файле",  MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
+            if(Data.Count > 0)
+            {
+                DrawChart(Data);
+                chart1.ChartAreas[0].AxisX.Title = "Дата";
+                chart1.ChartAreas[0].AxisY.Title = "Стоимость";
+                chart1.ChartAreas[0].AxisX.TitleFont = new System.Drawing.Font("Arial", 10, FontStyle.Bold);
+                chart1.ChartAreas[0].AxisY.TitleFont = new System.Drawing.Font("Arial", 10, FontStyle.Bold);
 
-            DrawChart(Data);
-            chart1.ChartAreas[0].AxisX.Title = "Дата";
-            chart1.ChartAreas[0].AxisY.Title = "Стоимость";
-            chart1.ChartAreas[0].AxisX.TitleFont = new System.Drawing.Font("Arial", 10, FontStyle.Bold);
-            chart1.ChartAreas[0].AxisY.TitleFont = new System.Drawing.Font("Arial", 10, FontStyle.Bold);
 
-            checkBox1.CheckState = CheckState.Unchecked;
-            checkBox2.CheckState = CheckState.Unchecked;
-            checkBox3.CheckState = CheckState.Unchecked;
-            checkBox4.CheckState = CheckState.Unchecked;
-            panel8.Visible = true;
-            panel10.Visible = true;
-            panel11.Visible = true;
-            сохранитьКакToolStripMenuItem.Visible = true;
+                panel8.Visible = true;
+                panel10.Visible = true;
+                panel11.Visible = true;
+                сохранитьКакToolStripMenuItem.Visible = true;
 
-            Razchet();
+                Razchet();
+            }
+            else
+            {
+                panel8.Visible = false;
+                panel10.Visible = false;
+                panel11.Visible = false;
+                сохранитьКакToolStripMenuItem.Visible = false;
 
-            
+            }
+
+
+
+
 
             foreach (var i in Data)
             {
@@ -267,40 +287,7 @@ namespace PSA
             //}
 
             // Метод для нахождения локальных максимумов
-            List<double> FindLocalMaxima(List<Data> dataList)
-            {
-                List<double> localMaxima = new List<double>();
-
-                for (int i = 1; i < dataList.Count - 1; i++)
-                {
-                    if (dataList[i].Value > dataList[i - 1].Value && dataList[i].Value > dataList[i + 1].Value)
-                    {
-                        localMaxima.Add(dataList[i].Value);
-                    }
-                }
-
-                return localMaxima;
-            }
-            double FindResistanceLevel(List<Data> dataList)
-            {
-                if (dataList.Count == 0)
-                    return 0;
-
-                if (dataList == null || dataList.Count < 3)
-                    throw new ArgumentException("Data list must contain at least 3 data points to find local maxima");
-
-                // Находим локальные максимумы
-                List<double> localMaxima = FindLocalMaxima(dataList);
-
-                if (localMaxima.Count == 0)
-                    throw new InvalidOperationException("No local maxima found in the data list");
-
-                // Рассчитываем среднее значение локальных максимумов как уровень сопротивления
-                double resistanceLevel = localMaxima.Average();
-                return resistanceLevel;
-            }
-
-            soprotivlenie = FindResistanceLevel(Data);
+            
 
 
 
@@ -334,7 +321,89 @@ namespace PSA
 
         }
 
+        private void PoiskTrendov()
+        {
+            /*List<Data> FindLocalMaxima()
+            {
+                List<Data> localMaxima = new List<Data>();
+                for (int i = 1; i < Data.Count - 1; i++)
+                {
+                    if (Data[i].Value > Data[i - 1].Value && Data[i].Value > Data[i + 1].Value)
+                    {
+                        localMaxima.Add(Data[i]);
+                    }
+                }
+                return localMaxima;
+            }
 
+            List<Data> FindLocalMinima()
+            {
+                List<Data> localMinima = new List<Data>();
+                for (int i = 1; i < Data.Count - 1; i++)
+                {
+                    if (Data[i].Value < Data[i - 1].Value && Data[i].Value < Data[i + 1].Value)
+                    {
+                        localMinima.Add(Data[i]);
+                    }
+                }
+                return localMinima;
+            }*/
+
+            void LinearRegression(double[] xValues, double[] yValues, out double a, out double b)
+            {
+                int n = xValues.Length;
+                double sumX = xValues.Sum();
+                double sumY = yValues.Sum();
+                double sumX2 = xValues.Sum(x => x * x);
+                double sumXY = xValues.Zip(yValues, (x, y) => x * y).Sum();
+
+                a = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+                b = (sumY - a * sumX) / n;
+            }
+
+
+            void PlotTrendLine()
+            {
+                if (Data.Count < 2)
+                {
+                    return;
+                }
+
+                //// Расчет количества элементов для 40%
+                //int count = (int)(Data.Count * 1);
+
+                //// Если количество элементов меньше 1, установить его в 1
+                //if (count < 1) count = 1;
+
+                //// Расчет начального индекса
+                //int startIndex = Data.Count - count;
+
+                //// Извлечение последних 20% значений
+                //List<Data> last20PercentList = Data.GetRange(startIndex, count);
+
+                double[] xValues = Data.Select(p => p.Date.ToOADate()).ToArray();
+                double[] yValues = Data.Select(p => p.Value).ToArray();
+
+                double a, b;
+                LinearRegression(xValues, yValues, out a, out b);
+
+                Series trendLine = new Series("trendLine")
+                {
+                    ChartType = SeriesChartType.Line,
+                    Color = Color.Orange,
+                    BorderWidth = 2,
+                    //XValueType = ChartValueType.DateTime
+                };
+                chart1.Series.Add(trendLine);
+
+                double startX = xValues.First();
+                double endX = xValues.Last();
+                trendLine.Points.AddXY(DateTime.FromOADate(startX), a * startX + b);
+                trendLine.Points.AddXY(DateTime.FromOADate(endX), a * endX + b);
+            }
+
+            PlotTrendLine();
+        }
 
 
 
@@ -346,7 +415,7 @@ namespace PSA
             // Создать новую серию данных для графика
             Series series = new Series("stocks");
             series.ChartType = SeriesChartType.Line; // Выбрать тип графика (линейный)
-            series.BorderWidth = 4; //толщина линии
+            series.BorderWidth = 3; //толщина линии
             series.Color = Color.DarkRed;
             
 
@@ -430,7 +499,21 @@ namespace PSA
                 chart1.Series.RemoveAt(chart1.Series.IndexOf("mush"));
         }
 
-        
+        private void checkBox5_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox5.Checked == true)
+            {
+                PoiskTrendov();
+            }
+            else
+            {
+                if (chart1.Series.IndexOf("trendLine") > 0)
+                {
+                    chart1.Series.RemoveAt(chart1.Series.IndexOf("trendLine"));
+                }
+            }
+        }
+
 
 
         private void InitializeToolTiop()
@@ -507,7 +590,8 @@ namespace PSA
                 }
 
                 Word.Paragraph para3 = document.Paragraphs.Add();
-                para3.Range.Text = $"Среднее значение и медиана составляют {srznach} и {median} соответственно. Если относительная разница этих величин больше определенного " +
+                para3.Range.Text = "На рисунке изображен график изменения цены акции, а также цветами отмечены расчетные величины.";
+                para3.Range.Text += $"Среднее значение и медиана составляют {srznach} и {median} соответственно. Если относительная разница этих величин больше определенного " +
                     $"порога (например, 10% или 20%), это может быть индикатором асимметрии или наличия выбросов.";
                 para3.Range.Text += $"Нижний и верхний пределы - {leftBound} и {rightBound}. Показывают наименьшую и наибольшую цену";
                 para3.Range.Text += $"Показатель дисперсии - {variance}. Дисперсия в данных о стоимости акций показывает степень разброса или вариативности " +
@@ -576,7 +660,8 @@ namespace PSA
                     pdfDoc.Add(new Paragraph("\n"));
 
                     // Добавляем остальные данные с использованием кириллического шрифта размером 14
-                    string text = $"Среднее значение и медиана составляют {srznach} и {median} соответственно. Если относительная разница этих величин больше определенного " +
+                    string text = $"На рисунке изображен график изменения цены акции, а также цветами отмечены расчетные величины.\n" +
+                        $"Среднее значение и медиана составляют {srznach} и {median} соответственно. Если относительная разница этих величин больше определенного " +
                         $"порога (например, 10% или 20%), это может быть индикатором асимметрии или наличия выбросов.\n\n" +
                         $"Нижний и верхний пределы - {leftBound} и {rightBound}. Показывают наименьшую и наибольшую цену.\n\n" +
                         $"Показатель дисперсии - {variance}. Дисперсия в данных о стоимости акций показывает степень разброса или вариативности " +
@@ -600,6 +685,8 @@ namespace PSA
                 MessageBox.Show(ex.Message, "Ошибка");
             }
         }
+
+        
 
         private void buttonExportDocx_Click(object sender, EventArgs e)
         {
@@ -634,7 +721,7 @@ namespace PSA
 
        private void Form2LabelClick_Click(object sender, EventArgs e)
         {
-            Form2 form2 = new Form2(this);
+            Form2 form2 = new Form2(this, this.Location.X, this.Location.Y);
             List<Data> NewData = new List<Data>();
             int counter = 0;
             foreach(var data in Data)
