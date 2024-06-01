@@ -129,23 +129,34 @@ namespace PSA
                 Console.WriteLine($"Обнаружено:\n *{countEmptyCells} строк, где есть пустые ячейки\n *{countErrors} ошибок, которые не удалось исправить");
                 MessageBox.Show($"Обнаружено:\n *{countEmptyCells} строк, где есть пустые ячейки\n *{countErrors} ошибок, которые не удалось исправить", "Ошибки в файле",  MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
+            if(Data.Count > 0)
+            {
+                DrawChart(Data);
+                chart1.ChartAreas[0].AxisX.Title = "Дата";
+                chart1.ChartAreas[0].AxisY.Title = "Стоимость";
+                chart1.ChartAreas[0].AxisX.TitleFont = new System.Drawing.Font("Arial", 10, FontStyle.Bold);
+                chart1.ChartAreas[0].AxisY.TitleFont = new System.Drawing.Font("Arial", 10, FontStyle.Bold);
 
-            DrawChart(Data);
-            chart1.ChartAreas[0].AxisX.Title = "Дата";
-            chart1.ChartAreas[0].AxisY.Title = "Стоимость";
-            chart1.ChartAreas[0].AxisX.TitleFont = new System.Drawing.Font("Arial", 10, FontStyle.Bold);
-            chart1.ChartAreas[0].AxisY.TitleFont = new System.Drawing.Font("Arial", 10, FontStyle.Bold);
 
-            
-            panel8.Visible = true;
-            panel10.Visible = true;
-            panel11.Visible = true;
-            сохранитьКакToolStripMenuItem.Visible = true;
+                panel8.Visible = true;
+                panel10.Visible = true;
+                panel11.Visible = true;
+                сохранитьКакToolStripMenuItem.Visible = true;
 
-            Razchet();
-            
+                Razchet();
+            }
+            else
+            {
+                panel8.Visible = false;
+                panel10.Visible = false;
+                panel11.Visible = false;
+                сохранитьКакToolStripMenuItem.Visible = false;
 
-            
+            }
+
+
+
+
 
             foreach (var i in Data)
             {
@@ -579,7 +590,8 @@ namespace PSA
                 }
 
                 Word.Paragraph para3 = document.Paragraphs.Add();
-                para3.Range.Text = $"Среднее значение и медиана составляют {srznach} и {median} соответственно. Если относительная разница этих величин больше определенного " +
+                para3.Range.Text = "На рисунке изображен график изменения цены акции, а также цветами отмечены расчетные величины.";
+                para3.Range.Text += $"Среднее значение и медиана составляют {srznach} и {median} соответственно. Если относительная разница этих величин больше определенного " +
                     $"порога (например, 10% или 20%), это может быть индикатором асимметрии или наличия выбросов.";
                 para3.Range.Text += $"Нижний и верхний пределы - {leftBound} и {rightBound}. Показывают наименьшую и наибольшую цену";
                 para3.Range.Text += $"Показатель дисперсии - {variance}. Дисперсия в данных о стоимости акций показывает степень разброса или вариативности " +
@@ -648,7 +660,8 @@ namespace PSA
                     pdfDoc.Add(new Paragraph("\n"));
 
                     // Добавляем остальные данные с использованием кириллического шрифта размером 14
-                    string text = $"Среднее значение и медиана составляют {srznach} и {median} соответственно. Если относительная разница этих величин больше определенного " +
+                    string text = $"На рисунке изображен график изменения цены акции, а также цветами отмечены расчетные величины.\n" +
+                        $"Среднее значение и медиана составляют {srznach} и {median} соответственно. Если относительная разница этих величин больше определенного " +
                         $"порога (например, 10% или 20%), это может быть индикатором асимметрии или наличия выбросов.\n\n" +
                         $"Нижний и верхний пределы - {leftBound} и {rightBound}. Показывают наименьшую и наибольшую цену.\n\n" +
                         $"Показатель дисперсии - {variance}. Дисперсия в данных о стоимости акций показывает степень разброса или вариативности " +

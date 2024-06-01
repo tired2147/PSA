@@ -52,6 +52,7 @@
             this.buttonExportPdf = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.checkBox5 = new System.Windows.Forms.CheckBox();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
@@ -73,7 +74,6 @@
             this.panel9 = new System.Windows.Forms.Panel();
             this.panel10 = new System.Windows.Forms.Panel();
             this.panel11 = new System.Windows.Forms.Panel();
-            this.checkBox5 = new System.Windows.Forms.CheckBox();
             this.menuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
@@ -180,9 +180,9 @@
             this.label6.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.label6.Location = new System.Drawing.Point(50, 64);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(66, 33);
+            this.label6.Size = new System.Drawing.Size(32, 33);
             this.label6.TabIndex = 7;
-            this.label6.Text = "100";
+            this.label6.Text = "0";
             // 
             // label5
             // 
@@ -191,9 +191,9 @@
             this.label5.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.label5.Location = new System.Drawing.Point(50, 64);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(66, 33);
+            this.label5.Size = new System.Drawing.Size(32, 33);
             this.label5.TabIndex = 6;
-            this.label5.Text = "100";
+            this.label5.Text = "0";
             // 
             // label4
             // 
@@ -202,9 +202,9 @@
             this.label4.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.label4.Location = new System.Drawing.Point(52, 64);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(66, 33);
+            this.label4.Size = new System.Drawing.Size(32, 33);
             this.label4.TabIndex = 5;
-            this.label4.Text = "100";
+            this.label4.Text = "0";
             // 
             // label3
             // 
@@ -213,9 +213,9 @@
             this.label3.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.label3.Location = new System.Drawing.Point(52, 64);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(66, 33);
+            this.label3.Size = new System.Drawing.Size(32, 33);
             this.label3.TabIndex = 4;
-            this.label3.Text = "100";
+            this.label3.Text = "0";
             // 
             // label1
             // 
@@ -224,9 +224,9 @@
             this.label1.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.label1.Location = new System.Drawing.Point(51, 64);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(66, 33);
+            this.label1.Size = new System.Drawing.Size(32, 33);
             this.label1.TabIndex = 2;
-            this.label1.Text = "100";
+            this.label1.Text = "0";
             // 
             // buttonExportDocx
             // 
@@ -263,9 +263,9 @@
             this.label2.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.label2.Location = new System.Drawing.Point(52, 64);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(66, 33);
+            this.label2.Size = new System.Drawing.Size(32, 33);
             this.label2.TabIndex = 3;
-            this.label2.Text = "100";
+            this.label2.Text = "0";
             // 
             // panel1
             // 
@@ -281,6 +281,17 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(649, 505);
             this.panel1.TabIndex = 2;
+            // 
+            // checkBox5
+            // 
+            this.checkBox5.AutoSize = true;
+            this.checkBox5.Location = new System.Drawing.Point(17, 476);
+            this.checkBox5.Name = "checkBox5";
+            this.checkBox5.Size = new System.Drawing.Size(103, 17);
+            this.checkBox5.TabIndex = 7;
+            this.checkBox5.Text = "Тренд графика";
+            this.checkBox5.UseVisualStyleBackColor = true;
+            this.checkBox5.CheckedChanged += new System.EventHandler(this.checkBox5_CheckedChanged);
             // 
             // chart1
             // 
@@ -519,17 +530,6 @@
             this.panel11.Size = new System.Drawing.Size(207, 66);
             this.panel11.TabIndex = 15;
             this.panel11.Visible = false;
-            // 
-            // checkBox5
-            // 
-            this.checkBox5.AutoSize = true;
-            this.checkBox5.Location = new System.Drawing.Point(17, 476);
-            this.checkBox5.Name = "checkBox5";
-            this.checkBox5.Size = new System.Drawing.Size(103, 17);
-            this.checkBox5.TabIndex = 7;
-            this.checkBox5.Text = "Тренд графика";
-            this.checkBox5.UseVisualStyleBackColor = true;
-            this.checkBox5.CheckedChanged += new System.EventHandler(this.checkBox5_CheckedChanged);
             // 
             // Form1
             // 
