@@ -50,6 +50,7 @@ namespace PSA
                     checkBox2.CheckState = CheckState.Unchecked;
                     checkBox3.CheckState = CheckState.Unchecked;
                     checkBox4.CheckState = CheckState.Unchecked;
+                    checkBox5.CheckState = CheckState.Unchecked;
                     chart1.Series.Clear();
                     label1.Text = ""; label2.Text = ""; label3.Text = ""; label4.Text = ""; label5.Text = ""; label6.Text = "";
                     OpenFile();
@@ -63,6 +64,7 @@ namespace PSA
                 checkBox2.CheckState = CheckState.Unchecked;
                 checkBox3.CheckState = CheckState.Unchecked;
                 checkBox4.CheckState = CheckState.Unchecked;
+                checkBox5.CheckState = CheckState.Unchecked;
                 OpenFile();
 
             }
@@ -141,7 +143,7 @@ namespace PSA
             сохранитьКакToolStripMenuItem.Visible = true;
 
             Razchet();
-            PoiskTrendov();
+            
 
             
 
@@ -374,7 +376,7 @@ namespace PSA
                 double a, b;
                 LinearRegression(xValues, yValues, out a, out b);
 
-                Series trendLine = new Series("TrendLine")
+                Series trendLine = new Series("trendLine")
                 {
                     ChartType = SeriesChartType.Line,
                     Color = Color.Orange,
@@ -486,7 +488,21 @@ namespace PSA
                 chart1.Series.RemoveAt(chart1.Series.IndexOf("mush"));
         }
 
-        
+        private void checkBox5_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox5.Checked == true)
+            {
+                PoiskTrendov();
+            }
+            else
+            {
+                if (chart1.Series.IndexOf("trendLine") > 0)
+                {
+                    chart1.Series.RemoveAt(chart1.Series.IndexOf("trendLine"));
+                }
+            }
+        }
+
 
 
         private void InitializeToolTiop()
@@ -657,6 +673,8 @@ namespace PSA
             }
         }
 
+        
+
         private void buttonExportDocx_Click(object sender, EventArgs e)
         {
             using (SaveFileDialog saveFileDialog = new SaveFileDialog())
@@ -690,7 +708,7 @@ namespace PSA
 
        private void Form2LabelClick_Click(object sender, EventArgs e)
         {
-            Form2 form2 = new Form2(this);
+            Form2 form2 = new Form2(this, this.Location.X, this.Location.Y);
             List<Data> NewData = new List<Data>();
             int counter = 0;
             foreach(var data in Data)
