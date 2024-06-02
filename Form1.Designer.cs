@@ -52,6 +52,7 @@
             this.buttonExportPdf = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.checkBox5 = new System.Windows.Forms.CheckBox();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
@@ -112,7 +113,7 @@
             // загрузитьToolStripMenuItem
             // 
             this.загрузитьToolStripMenuItem.Name = "загрузитьToolStripMenuItem";
-            this.загрузитьToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.загрузитьToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             this.загрузитьToolStripMenuItem.Text = "Загрузить данные";
             this.загрузитьToolStripMenuItem.Click += new System.EventHandler(this.загрузитьToolStripMenuItem_Click);
             // 
@@ -122,21 +123,21 @@
             this.какPDFToolStripMenuItem,
             this.какDOCXToolStripMenuItem});
             this.сохранитьКакToolStripMenuItem.Name = "сохранитьКакToolStripMenuItem";
-            this.сохранитьКакToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.сохранитьКакToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             this.сохранитьКакToolStripMenuItem.Text = "Сохранить как";
             this.сохранитьКакToolStripMenuItem.Visible = false;
             // 
             // какPDFToolStripMenuItem
             // 
             this.какPDFToolStripMenuItem.Name = "какPDFToolStripMenuItem";
-            this.какPDFToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.какPDFToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
             this.какPDFToolStripMenuItem.Text = "Как PDF";
             this.какPDFToolStripMenuItem.Click += new System.EventHandler(this.какPDFToolStripMenuItem_Click);
             // 
             // какDOCXToolStripMenuItem
             // 
             this.какDOCXToolStripMenuItem.Name = "какDOCXToolStripMenuItem";
-            this.какDOCXToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.какDOCXToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
             this.какDOCXToolStripMenuItem.Text = "Как DOCX";
             this.какDOCXToolStripMenuItem.Click += new System.EventHandler(this.какDOCXToolStripMenuItem_Click);
             // 
@@ -179,9 +180,9 @@
             this.label6.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.label6.Location = new System.Drawing.Point(50, 64);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(66, 33);
+            this.label6.Size = new System.Drawing.Size(32, 33);
             this.label6.TabIndex = 7;
-            this.label6.Text = "100";
+            this.label6.Text = "0";
             // 
             // label5
             // 
@@ -190,9 +191,9 @@
             this.label5.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.label5.Location = new System.Drawing.Point(50, 64);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(66, 33);
+            this.label5.Size = new System.Drawing.Size(32, 33);
             this.label5.TabIndex = 6;
-            this.label5.Text = "100";
+            this.label5.Text = "0";
             // 
             // label4
             // 
@@ -201,9 +202,9 @@
             this.label4.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.label4.Location = new System.Drawing.Point(52, 64);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(66, 33);
+            this.label4.Size = new System.Drawing.Size(32, 33);
             this.label4.TabIndex = 5;
-            this.label4.Text = "100";
+            this.label4.Text = "0";
             // 
             // label3
             // 
@@ -212,9 +213,9 @@
             this.label3.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.label3.Location = new System.Drawing.Point(52, 64);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(66, 33);
+            this.label3.Size = new System.Drawing.Size(32, 33);
             this.label3.TabIndex = 4;
-            this.label3.Text = "100";
+            this.label3.Text = "0";
             // 
             // label1
             // 
@@ -223,9 +224,9 @@
             this.label1.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.label1.Location = new System.Drawing.Point(51, 64);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(66, 33);
+            this.label1.Size = new System.Drawing.Size(32, 33);
             this.label1.TabIndex = 2;
-            this.label1.Text = "100";
+            this.label1.Text = "0";
             // 
             // buttonExportDocx
             // 
@@ -262,14 +263,15 @@
             this.label2.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.label2.Location = new System.Drawing.Point(52, 64);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(66, 33);
+            this.label2.Size = new System.Drawing.Size(32, 33);
             this.label2.TabIndex = 3;
-            this.label2.Text = "100";
+            this.label2.Text = "0";
             // 
             // panel1
             // 
             this.panel1.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.panel1.AutoSize = true;
+            this.panel1.Controls.Add(this.checkBox5);
             this.panel1.Controls.Add(this.chart1);
             this.panel1.Controls.Add(this.checkBox1);
             this.panel1.Controls.Add(this.checkBox2);
@@ -279,6 +281,17 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(649, 505);
             this.panel1.TabIndex = 2;
+            // 
+            // checkBox5
+            // 
+            this.checkBox5.AutoSize = true;
+            this.checkBox5.Location = new System.Drawing.Point(17, 476);
+            this.checkBox5.Name = "checkBox5";
+            this.checkBox5.Size = new System.Drawing.Size(103, 17);
+            this.checkBox5.TabIndex = 7;
+            this.checkBox5.Text = "Тренд графика";
+            this.checkBox5.UseVisualStyleBackColor = true;
+            this.checkBox5.CheckedChanged += new System.EventHandler(this.checkBox5_CheckedChanged);
             // 
             // chart1
             // 
@@ -295,6 +308,7 @@
             this.chart1.Legends.Add(legend1);
             this.chart1.Location = new System.Drawing.Point(0, 0);
             this.chart1.Name = "chart1";
+            this.chart1.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Pastel;
             this.chart1.Size = new System.Drawing.Size(649, 466);
             this.chart1.TabIndex = 1;
             this.chart1.Text = "chart1";
@@ -302,7 +316,7 @@
             // checkBox1
             // 
             this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(512, 477);
+            this.checkBox1.Location = new System.Drawing.Point(563, 476);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(71, 17);
             this.checkBox1.TabIndex = 3;
@@ -313,7 +327,7 @@
             // checkBox2
             // 
             this.checkBox2.AutoSize = true;
-            this.checkBox2.Location = new System.Drawing.Point(99, 477);
+            this.checkBox2.Location = new System.Drawing.Point(150, 476);
             this.checkBox2.Name = "checkBox2";
             this.checkBox2.Size = new System.Drawing.Size(99, 17);
             this.checkBox2.TabIndex = 4;
@@ -324,7 +338,7 @@
             // checkBox3
             // 
             this.checkBox3.AutoSize = true;
-            this.checkBox3.Location = new System.Drawing.Point(224, 477);
+            this.checkBox3.Location = new System.Drawing.Point(275, 476);
             this.checkBox3.Name = "checkBox3";
             this.checkBox3.Size = new System.Drawing.Size(105, 17);
             this.checkBox3.TabIndex = 5;
@@ -335,7 +349,7 @@
             // checkBox4
             // 
             this.checkBox4.AutoSize = true;
-            this.checkBox4.Location = new System.Drawing.Point(362, 477);
+            this.checkBox4.Location = new System.Drawing.Point(413, 476);
             this.checkBox4.Name = "checkBox4";
             this.checkBox4.Size = new System.Drawing.Size(119, 17);
             this.checkBox4.TabIndex = 6;
@@ -614,6 +628,7 @@
         private System.Windows.Forms.ToolStripMenuItem сохранитьКакToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem какPDFToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem какDOCXToolStripMenuItem;
+        private System.Windows.Forms.CheckBox checkBox5;
     }
 }
 
