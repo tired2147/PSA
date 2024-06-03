@@ -578,6 +578,7 @@ namespace PSA
                 checkBox3.CheckState = CheckState.Unchecked;
                 checkBox4.CheckState = CheckState.Unchecked;
                 checkBox5.CheckState = CheckState.Unchecked;
+                checkBox6.CheckState = CheckState.Unchecked;
                 richTextBox1.Text = "Паттерн \"Голова и плечи\" сигнализирует о развороте восходящего тренда в нисходящий.";
                 List<Data> Data;
                 Data = DataBank.DataList;
